@@ -23,7 +23,11 @@ export class ApiService {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
 
-  patch<T>(endpoint: string, body: Partial<T>): Observable<ApiResponse<T>> {
+  put<T, B = T>(endpoint: string, body: B): Observable<ApiResponse<T>> {
+    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+  }
+
+  patch<T, B = Partial<T>>(endpoint: string, body: B): Observable<ApiResponse<T>> {
     return this.http.patch<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
 
