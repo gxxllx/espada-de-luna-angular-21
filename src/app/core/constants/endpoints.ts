@@ -6,5 +6,9 @@ export const ENDPOINTS = {
     GOOGLE_LOGIN: 'google-login',
     LOGOUT: 'logout',
     PROFILE: 'profile',
+    FORGOT: 'forgot-password',
+    RESET: 'reset-password',
+    SEND_VERIFICATION: 'send-verification-email',
+    VERIFY: 'verify-email',
   },
 } as const;

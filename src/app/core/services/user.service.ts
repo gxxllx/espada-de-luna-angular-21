@@ -2,18 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ApiService, ApiResponse } from '../api';
 import { ENDPOINTS } from '../constants/endpoints';
 import { Observable } from 'rxjs';
-
-export interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  role: 'user' | 'admin';
-}
-
-export type UserLogin = Pick<User, 'email'> & { user_password: string };
-export type UserRegister = Omit<User, 'id' | 'role' | 'phone'> & { user_password: string };
+import { User } from '@/types/user.types';
 
 @Injectable({
   providedIn: 'root',
@@ -22,28 +11,30 @@ export class UserService {
   private readonly api = inject(ApiService);
   private readonly routes = ENDPOINTS.USER;
 
-  userLogin(u: UserLogin): Observable<ApiResponse<User>> {
-    return this.api.post<User, UserLogin>(`${this.routes.BASE}/${this.routes.LOGIN}`, u);
+  updateProfile(data: Partial<User>): Observable<ApiResponse<User>> {
+    return this.api.patch<User>(`${this.routes.BASE}/${this.routes.PROFILE}`, data);
   }
 
-  userRegister(u: UserRegister): Observable<ApiResponse<User>> {
-    return this.api.post<User, UserRegister>(`${this.routes.BASE}/${this.routes.REGISTER}`, u);
+  forgotPassword(email: string): Observable<ApiResponse<User>> {
+    return this.api.post<User, { email: string }>(`${this.routes.BASE}/${this.routes.FORGOT}`, {
+      email,
+    });
   }
 
-  userLoginWithGoogle(credential: string): Observable<ApiResponse<User>> {
-    return this.api.post<User, { credential: string }>(
-      `${this.routes.BASE}/${this.routes.GOOGLE_LOGIN}`,
+  resetPassword(user_password: string): Observable<ApiResponse<User>> {
+    return this.api.patch<User, { user_password: string }>(
+      `${this.routes.BASE}/${this.routes.RESET}`,
       {
-        credential,
+        user_password,
       }
     );
   }
 
-  userLogout(): Observable<ApiResponse<null>> {
-    return this.api.post<null>(`${this.routes.BASE}/${this.routes.LOGOUT}`);
+  sendVerificationEmail(): Observable<ApiResponse<void>> {
+    return this.api.post<void>(`${this.routes.BASE}/${this.routes.SEND_VERIFICATION}`);
   }
 
-  getUserProfile(): Observable<ApiResponse<User>> {
-    return this.api.get<User>(`${this.routes.BASE}/${this.routes.PROFILE}`);
+  verifyEmail(): Observable<ApiResponse<void>> {
+    return this.api.post<void>(`${this.routes.BASE}/${this.routes.VERIFY}`);
   }
 }
