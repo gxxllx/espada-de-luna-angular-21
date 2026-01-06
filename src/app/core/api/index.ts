@@ -13,7 +13,7 @@ export interface ApiResponse<T> {
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = NGX_ENV_.API_URL;
+  private readonly baseUrl = NGX_ENV.API_URL;
 
   get<T>(endpoint: string): Observable<ApiResponse<T>> {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);

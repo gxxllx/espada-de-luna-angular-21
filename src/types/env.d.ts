@@ -18,7 +18,7 @@ declare interface ImportMeta {
 // ngxEnv: {
 //  define: 'NGX_ENV_',
 // }
-declare const NGX_ENV_: Env;
+declare const NGX_ENV: Env;
 
 // 3. Use process.env.YOUR_ENV_VAR in your code. (deprecated)
 declare namespace NodeJS {
