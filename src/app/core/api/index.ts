@@ -2,10 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Interfaz para la "envoltura" de la respuesta
 export interface ApiResponse<T> {
   data: T;
   status: string;
+  message?: string;
 }
 
 @Injectable({
@@ -19,7 +19,7 @@ export class ApiService {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);
   }
 
-  post<T, B = T>(endpoint: string, body: B): Observable<ApiResponse<T>> {
+  post<T, B = T>(endpoint: string, body?: B): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
 
