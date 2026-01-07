@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ApiService, ApiResponse } from '../api';
 import { ENDPOINTS } from '../constants/endpoints';
 import { Observable } from 'rxjs';
-import { User } from '@/app/core/models/user.types';
+import { User } from '@/app/core/models/user.models';
 
 @Injectable({
   providedIn: 'root',

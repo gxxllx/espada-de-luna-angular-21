@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { ApiService, ApiResponse } from '../api';
 import { ENDPOINTS } from '../constants/endpoints';
-import { User, UserLogin, UserRegister } from '@/app/core/models/user.types';
+import { User, UserLogin, UserRegister } from '@/app/core/models/user.models';
 import { Observable, tap, catchError, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
