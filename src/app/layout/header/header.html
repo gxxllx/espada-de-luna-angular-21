@@ -1,10 +1,21 @@
 <header>
-  <nav>
+  <nav class="header__nav">
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/services">Services</a></li>
-      <li><a href="/contact">Contact</a></li>
+      <li>
+        Categories
+        <ul>
+          @for (item of categories.value() ?? []; track item) {
+          <li>
+            <a [routerLink]="['/collections', item]">{{ item.category_name }}</a>
+          </li>
+          }
+        </ul>
+      </li>
+      <li><a routerLink="/services">Services</a></li>
+      <li><a routerLink="/about">About</a></li>
+      <li><a routerLink="/contact">Contact us</a></li>
+      <li><a routerLink="/profile">Account</a></li>
+      <li><a routerLink="/cart">Cart</a></li>
     </ul>
   </nav>
 </header>

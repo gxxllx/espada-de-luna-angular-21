@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { inject, provideAppInitializer } from '@angular/core';
 import { translateProviders } from './i18n/translate.config';
 import { credentialsInterceptor } from './interceptors/credentials.interceptor';
@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 
 export const CORE_CONFIG = [
   ...translateProviders,
-  provideHttpClient(withInterceptors([credentialsInterceptor])),
+  provideHttpClient(withInterceptors([credentialsInterceptor]), withFetch()),
   provideAppInitializer(() => {
     const authService = inject(AuthService);
     return firstValueFrom(authService.checkSession());

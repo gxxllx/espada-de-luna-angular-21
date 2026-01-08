@@ -11,4 +11,7 @@ export const ENDPOINTS = {
     SEND_VERIFICATION: 'send-verification-email',
     VERIFY: 'verify-email',
   },
+  CATEGORY: {
+    BASE: 'category',
+  },
 } as const;

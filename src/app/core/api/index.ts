@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@/environments/environment';
 
 export interface ApiResponse<T> {
   data: T;
@@ -13,7 +14,7 @@ export interface ApiResponse<T> {
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = NGX_ENV.API_URL;
+  private readonly baseUrl = environment.apiUrl;
 
   get<T>(endpoint: string): Observable<ApiResponse<T>> {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);

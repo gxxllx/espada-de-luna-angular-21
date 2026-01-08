@@ -10,7 +10,7 @@ export function httpTranslateLoader(): TranslateLoader {
 export const translateProviders = [
   importProvidersFrom(
     TranslateModule.forRoot({
-      defaultLanguage: 'es',
+      fallbackLang: 'es',
       loader: {
         provide: TranslateLoader,
         useFactory: httpTranslateLoader,
