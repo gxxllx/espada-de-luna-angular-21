@@ -5,7 +5,6 @@ import { environment } from '@/environments/environment';
 
 export interface ApiResponse<T> {
   data: T;
-  status: string;
   message?: string;
 }
 
