@@ -1,11 +1,17 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <div class="input-group">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" />
+    <input id="email" type="email" autocomplete="username" formControlName="email" />
   </div>
-  <div>
+
+  <div class="input-group">
     <label for="user_password">Contraseña</label>
-    <input id="user_password" type="password" formControlName="user_password" />
+    <input
+      id="user_password"
+      type="password"
+      autocomplete="current-password"
+      formControlName="user_password"
+    />
   </div>
 
   <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
