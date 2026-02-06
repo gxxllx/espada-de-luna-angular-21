@@ -1,0 +1,15 @@
+<div class="input-group">
+  <label [for]="id()">{{ label() }}</label>
+
+  <input
+    [id]="id()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [formControlName]="controlName()"
+    [autocomplete]="autoComplete()"
+  />
+
+  @if (showError() && errorMessage().length > 0) {
+    <span>{{ errorMessage() }}</span>
+  }
+</div>

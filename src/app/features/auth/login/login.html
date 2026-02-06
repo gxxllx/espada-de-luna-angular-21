@@ -1,18 +1,31 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-  <div class="input-group">
-    <label for="email">Email</label>
-    <input id="email" type="email" autocomplete="username" formControlName="email" />
-  </div>
+  <input-field
+    label="Email"
+    id="email"
+    type="email"
+    autoComplete="username"
+    controlName="email"
+    (input)="serverEmailError.set(null)"
+    [showError]="!!serverEmailError()"
+    [errorMessage]="serverEmailError() || 'Formato de email inválido'"
+  />
 
-  <div class="input-group">
-    <label for="user_password">Contraseña</label>
-    <input
-      id="user_password"
-      type="password"
-      autocomplete="current-password"
-      formControlName="user_password"
-    />
-  </div>
+  <input-field
+    label="Contraseña"
+    id="user_password"
+    type="password"
+    autoComplete="current-password"
+    controlName="user_password"
+    (input)="serverPasswordError.set(null)"
+    [showError]="!!serverPasswordError()"
+    [errorMessage]="serverPasswordError() || 'Campo requerido'"
+  />
 
-  <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+  <button-field
+    label="Ingresar"
+    type="submit"
+    [disabled]="loginForm.invalid"
+    [showError]="!!serverError()"
+    [errorMessage]="serverError() || 'Error de autenticación'"
+  />
 </form>

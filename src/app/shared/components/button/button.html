@@ -1,0 +1,8 @@
+<div class="button-group">
+  <button [type]="type()" [disabled]="disabled()" (click)="onClick()">
+    {{ label() }}
+  </button>
+  @if (showError() && errorMessage().length > 0) {
+    <span>{{ errorMessage() }}</span>
+  }
+</div>
