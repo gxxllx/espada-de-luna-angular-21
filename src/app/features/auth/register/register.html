@@ -1,1 +1,35 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+  <input-field
+    label="Email"
+    id="email"
+    type="email"
+    placeholder="Ingrese su email"
+    controlName="email"
+  />
+
+  <input-field
+    label="Contraseña"
+    id="user_password"
+    type="password"
+    controlName="user_password"
+    placeholder="Ingrese su contraseña"
+  />
+
+  <div class="power-container">
+    <div
+      id="power-point"
+      [style.width]="passwordStrength().width"
+      [style.backgroundColor]="passwordStrength().color"
+    ></div>
+  </div>
+
+  <input-field
+    label="Repetir Contraseña"
+    id="user_password_confirm"
+    type="password"
+    controlName="user_password_confirm"
+    placeholder="Repita su contraseña"
+  />
+
+  <button-field label="Registrar" type="submit" [disabled]="registerForm.invalid" />
+</form>
