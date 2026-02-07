@@ -13,6 +13,9 @@
     type="password"
     controlName="user_password"
     placeholder="Ingrese su contraseña"
+    autoComplete="new-password"
+    [showError]="registerForm.hasError('weak')"
+    errorMessage="La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo"
   />
 
   <div class="power-container">
@@ -29,7 +32,16 @@
     type="password"
     controlName="user_password_confirm"
     placeholder="Repita su contraseña"
+    autoComplete="new-password"
+    [showError]="registerForm.hasError('mismatch')"
+    errorMessage="Las contraseñas no coinciden"
   />
 
-  <button-field label="Registrar" type="submit" [disabled]="registerForm.invalid" />
+  <button-field
+    label="Registrar"
+    type="submit"
+    [disabled]="registerForm.invalid"
+    [showError]="!!serverErrorMessage()"
+    [errorMessage]="serverErrorMessage() || 'Error al registrar'"
+  />
 </form>
