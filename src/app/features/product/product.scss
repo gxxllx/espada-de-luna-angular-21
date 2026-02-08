@@ -1,0 +1,14 @@
+.product {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.product-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.variants-container__variant {
+  gap: 0.5rem;
+}

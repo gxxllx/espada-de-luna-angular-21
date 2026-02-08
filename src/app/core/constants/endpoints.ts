@@ -14,4 +14,8 @@ export const ENDPOINTS = {
   CATEGORY: {
     BASE: 'category',
   },
+  PRODUCT: {
+    BASE: 'product',
+    SLUG: 'slug',
+  },
 } as const;

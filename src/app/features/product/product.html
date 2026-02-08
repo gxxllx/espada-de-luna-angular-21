@@ -1,0 +1,34 @@
+<section class="product">
+  <div class="product-container">
+    <img [src]="product()?.image_url" alt="{{ product()?.product_name }}" />
+    <div>
+      <h1>{{ product()?.product_name }}</h1>
+      <p>{{ product()?.product_description }}</p>
+
+      <div class="variants-container">
+        @for (variant of variants(); track variant.id) {
+          <button
+            (click)="selectedVariantIndex.set(variants().indexOf(variant))"
+            class="variants-container__button"
+          >
+            {{ variants().indexOf(variant) }}
+          </button>
+        }
+        @if (variants()[selectedVariantIndex()]) {
+          <div class="variants-container__variant">
+            <p>Stock: {{ variants()[selectedVariantIndex()].stock }}</p>
+            <p>Size: {{ variants()[selectedVariantIndex()].size_id }}</p>
+            <p>
+              Precio:
+              {{
+                variants()[selectedVariantIndex()].sale_price
+                  ? variants()[selectedVariantIndex()].sale_price
+                  : product()?.price
+              }}
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
