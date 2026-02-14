@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
       },
       {
+        path: 'collections/:category',
+        loadComponent: () =>
+          import('./features/collections/collections').then((m) => m.Collections),
+      },
+      {
         path: 'product/:slug',
         loadComponent: () => import('./features/product/product').then((m) => m.Product),
       },
