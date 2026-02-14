@@ -8,7 +8,7 @@ export const USER_ROUTES: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('../features/home/home').then((m) => m.Home),
+        loadComponent: () => import('../features/user/home/home').then((m) => m.Home),
       },
       {
         path: 'login',
@@ -20,17 +20,17 @@ export const USER_ROUTES: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('../features/profile/profile').then((m) => m.Profile),
+        loadComponent: () => import('../features/user/profile/profile').then((m) => m.Profile),
         canActivate: [authGuard],
       },
       {
         path: 'collections/:category',
         loadComponent: () =>
-          import('../features/collections/collections').then((m) => m.Collections),
+          import('../features/user/collections/collections').then((m) => m.Collections),
       },
       {
         path: 'product/:slug',
-        loadComponent: () => import('../features/product/product').then((m) => m.Product),
+        loadComponent: () => import('../features/user/product/product').then((m) => m.Product),
       },
     ],
   },
