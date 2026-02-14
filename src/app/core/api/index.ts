@@ -31,7 +31,7 @@ export class ApiService {
     return this.http.patch<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
 
-  delete(endpoint: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${endpoint}`);
+  delete(endpoint: string): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/${endpoint}`);
   }
 }
