@@ -12,6 +12,6 @@ export class CategoryService {
   private readonly routes = ENDPOINTS.CATEGORY;
 
   getAll(): Observable<ApiResponse<Category[]>> {
-    return this.api.get<Category[]>(`${this.routes.BASE}/`);
+    return this.api.get<Category[]>(`${this.routes.BASE}`);
   }
 }
