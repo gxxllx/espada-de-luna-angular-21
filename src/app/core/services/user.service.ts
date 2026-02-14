@@ -11,6 +11,10 @@ export class UserService {
   private readonly api = inject(ApiService);
   private readonly routes = ENDPOINTS.USER;
 
+  getProfile(): Observable<ApiResponse<User>> {
+    return this.api.get<User>(`${this.routes.BASE}/${this.routes.PROFILE}`);
+  }
+
   updateProfile(data: Partial<User>): Observable<ApiResponse<User>> {
     return this.api.patch<User>(`${this.routes.BASE}/${this.routes.PROFILE}`, data);
   }
@@ -26,7 +30,7 @@ export class UserService {
       `${this.routes.BASE}/${this.routes.RESET}`,
       {
         user_password,
-      }
+      },
     );
   }
 
