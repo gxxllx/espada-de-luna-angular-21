@@ -1,6 +1,6 @@
 import { Component, inject, input, effect, signal } from '@angular/core';
-import { ProductService } from '../../core/services/product.service';
-import { Product as ProductModel } from '../../core/models/product.models';
+import { ProductService } from '@/app/core/services/product.service';
+import { Product as ProductModel } from '@/app/core/models/product.models';
 
 @Component({
   selector: 'app-collections',

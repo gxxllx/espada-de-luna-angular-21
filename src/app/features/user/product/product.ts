@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, effect, inject, input, signal } from '@angular/core';
-import { ProductService } from '../../core/services/product.service';
-import { Product as ProductModel, ProductVariant } from '../../core/models/product.models';
+import { ProductService } from '@/app/core/services/product.service';
+import { Product as ProductModel, ProductVariant } from '@/app/core/models/product.models';
 
 @Component({
   selector: 'app-product',
