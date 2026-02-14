@@ -34,14 +34,7 @@ export class Collections {
         },
       });
     } else {
-      // this.productService.getByCategory(category).subscribe({
-      //   next: (response) => {
-      //     this.productFromCategory.set(response.data);
-      //   },
-      //   error: (err) => {
-      //     console.error(err);
-      //   },
-      // });
+      // getByCategory method
     }
   }
 }
