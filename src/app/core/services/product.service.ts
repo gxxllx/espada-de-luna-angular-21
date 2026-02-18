@@ -19,6 +19,10 @@ export class ProductService {
     return this.api.get<Product>(`${this.routes.BASE}/${id}`);
   }
 
+  getByCategorySlug(categorySlug: string): Observable<ApiResponse<Product[]>> {
+    return this.api.get<Product[]>(`${this.routes.BASE}/${this.routes.CATEGORY}/${categorySlug}`);
+  }
+
   getBySlug(slug: string): Observable<ApiResponse<ProductDetail>> {
     return this.api.get<ProductDetail>(`${this.routes.BASE}/${this.routes.SLUG}/${slug}`);
   }

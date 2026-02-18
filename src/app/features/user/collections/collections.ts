@@ -33,8 +33,17 @@ export class Collections {
           console.error(err);
         },
       });
+    } else if (category) {
+      this.productService.getByCategorySlug(category).subscribe({
+        next: (response) => {
+          this.productFromCategory.set(response.data);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
     } else {
-      // getByCategory method
+      this.productFromCategory.set([]);
     }
   }
 }

@@ -24,6 +24,11 @@ export const USER_ROUTES: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'collections',
+        pathMatch: 'full',
+        redirectTo: 'collections/all',
+      },
+      {
         path: 'collections/:category',
         loadComponent: () =>
           import('../features/user/collections/collections').then((m) => m.Collections),

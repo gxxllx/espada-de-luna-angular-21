@@ -4,10 +4,12 @@
       <li>
         Categories
         <ul>
-          @for (item of categories.value() ?? []; track item) {
-          <li>
-            <a [routerLink]="['/collections', item]">{{ item.category_name }}</a>
-          </li>
+          @for (item of categories.value() ?? []; track item.id) {
+            <li>
+              <a [routerLink]="['/collections', item.slug]">
+                {{ item.category_name }}
+              </a>
+            </li>
           }
         </ul>
       </li>
