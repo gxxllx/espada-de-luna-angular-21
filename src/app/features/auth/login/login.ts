@@ -1,10 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, afterNextRender, viewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Input } from '@/app/shared/components/input/input';
 import { Button } from '@/app/shared/components/button/button';
 import { UserLogin } from '@/app/core/models/user.models';
 import { AuthService } from '@/app/core/services/auth.service';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +17,9 @@ import { AuthService } from '@/app/core/services/auth.service';
 export class Login {
   private readonly api = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+
+  googleBtn = viewChild<ElementRef<HTMLDivElement>>('googleBtn');
 
   serverEmailError = signal<string | null>(null);
   serverPasswordError = signal<string | null>(null);
@@ -24,6 +29,37 @@ export class Login {
     email: ['', [Validators.required, Validators.email]],
     user_password: ['', Validators.required],
   });
+
+  constructor() {
+    afterNextRender(() => {
+      this.initializeGoogleSignIn();
+    });
+  }
+
+  private initializeGoogleSignIn() {
+    const clientId = environment.googleClientId;
+
+    if (!clientId) {
+      console.error('Google Client ID is not defined in environment variables');
+      return;
+    }
+
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: (response: GoogleIdentity.CredentialResponse) => {
+        this.loginWithGoogle(response.credential);
+      },
+    });
+
+    const buttonElement = this.googleBtn()?.nativeElement;
+    if (buttonElement) {
+      google.accounts.id.renderButton(buttonElement, {
+        theme: 'filled_black',
+        size: 'large',
+        shape: 'pill',
+      });
+    }
+  }
 
   clearServerErrors() {
     this.serverEmailError.set(null);
@@ -39,12 +75,26 @@ export class Login {
       this.api.login(payload).subscribe({
         next: (response) => {
           console.log('Login successful:', response);
+          this.router.navigate(['collections/all']);
         },
         error: (err: HttpErrorResponse) => {
           this.handleLoginError(err);
         },
       });
     }
+  }
+
+  loginWithGoogle(credential: string) {
+    this.clearServerErrors();
+    this.api.loginWithGoogle(credential).subscribe({
+      next: (response) => {
+        console.log('Google login successful:', response);
+        this.router.navigate(['collections/all']);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.handleLoginError(err);
+      },
+    });
   }
 
   private handleLoginError(err: HttpErrorResponse) {
