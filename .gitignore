@@ -20,6 +20,7 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 .github/
+.agents/
 
 # Visual Studio Code
 .vscode
@@ -47,3 +48,4 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+skills-lock.json

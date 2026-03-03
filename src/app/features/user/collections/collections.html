@@ -1,10 +1,18 @@
-<section>
-  <h1>Collections</h1>
+<section class="collections">
   @for (product of productFromCategory(); track product.id) {
-    <div class="product-card">
-      <img [src]="product.image_url" alt="{{ product.product_name }}" />
-      <h2>{{ product.product_name }}</h2>
-      <p>{{ product.product_description }}</p>
-    </div>
+    <a class="card" [routerLink]="['/product', product.slug]">
+      <div class="card__image-wrapper">
+        <img
+          class="card__image"
+          [src]="product.image_url"
+          [alt]="product.product_name"
+          loading="lazy"
+        />
+      </div>
+      <div class="card__info">
+        <span class="card__name">{{ product.product_name }}</span>
+        <span class="card__price">{{ product.price.toFixed(2) }}€</span>
+      </div>
+    </a>
   }
 </section>

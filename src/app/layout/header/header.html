@@ -1,21 +1,28 @@
-<header>
-  <nav class="header__nav">
-    <ul>
-      <li>
-        Categories
-        <ul>
+<header class="header">
+  <nav class="header__nav" aria-label="Main navigation">
+    <div class="header__group header__group--left">
+      <div class="header__dropdown">
+        <a class="header__link header__link--trigger" routerLink="/collections">Collections</a>
+        <ul class="header__dropdown-menu" aria-label="Collections menu">
           @for (item of categories.value() ?? []; track item.id) {
-            <li>
-              <a [routerLink]="['/collections', item.slug]">
+            <li class="header__dropdown-item">
+              <a class="header__dropdown-link" [routerLink]="['/collections', item.slug]">
                 {{ item.category_name }}
               </a>
             </li>
           }
         </ul>
-      </li>
-      <li><a routerLink="/about">About</a></li>
-      <li><a routerLink="/profile">Account</a></li>
-      <li><a routerLink="/cart">Cart</a></li>
-    </ul>
+      </div>
+      <a class="header__link" routerLink="/about">About</a>
+    </div>
+
+    <div class="header__group header__group--center">
+      <a class="header__logo" routerLink="/" aria-label="Espada de Luna home">ESPADA DE LUNA</a>
+    </div>
+
+    <div class="header__group header__group--right">
+      <a class="header__link" routerLink="/cart">Cart</a>
+      <a class="header__link" routerLink="/profile">Account</a>
+    </div>
   </nav>
 </header>

@@ -1,21 +1,34 @@
 .footer-nav {
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
+  background-color: var(--obsidian);
+  border-top: 1px solid var(--steel);
+  color: var(--mist);
+  padding: var(--space-lg) var(--app-margins);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
 
   ul {
     list-style: none;
     display: flex;
     margin: 0;
     padding: 0;
-    gap: 20px;
+    gap: var(--space-lg);
+  }
+
+  a {
+    color: var(--mist);
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--moonlight);
+    }
   }
 
   div {
     display: flex;
-    gap: 20px;
+    gap: var(--space-md);
   }
 }

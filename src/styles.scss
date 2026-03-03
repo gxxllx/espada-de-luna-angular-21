@@ -1,7 +1,53 @@
+// ─── Surfaces — cathedral stone ───
 :root {
-  --primary-color: #3f51b5;
-  --header-height: 60px;
+  --void: #1b1b20;
+  --obsidian: #232329;
+  --onyx: #2c2c34;
+  --smoke: #3a3a45;
+
+  // Text — bone and silver
+  --bone: #ebe8e1;
+  --mist: #a3a3b3;
+  --ash: #76768a;
+
+  // Edges — steel borders
+  --steel: rgba(255, 255, 255, 0.1);
+  --steel-strong: rgba(255, 255, 255, 0.18);
+
+  // Accents
+  --moonlight: #c4bfd9;
+  --blood: #9b2335;
+  --blood-glow: #b82a40;
+
+  // Semantic
+  --destructive: #c44040;
+  --success: #3a8a5c;
+  --warning: #b8863a;
+
+  // Spacing
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+
+  // Layout
+  --header-height: 3.5rem;
   --app-margins: 2rem;
+
+  // Radii — sharp, like blade edges
+  --radius-sm: 0.15rem;
+  --radius-md: 0.3rem;
+  --radius-lg: 0.5rem;
+
+  // Typography
+  --font-display: 'Cinzel', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+html {
+  color-scheme: dark;
 }
 
 html,
@@ -9,7 +55,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: var(--font-body);
+  background-color: var(--void);
+  color: var(--bone);
 }
 
 *,
@@ -18,19 +66,41 @@ body {
   box-sizing: inherit;
 }
 
+a {
+  color: var(--bone);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--moonlight);
+  }
+}
+
+// ─── Form controls ───
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 
   input {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--steel-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--obsidian);
+    color: var(--bone);
+    font-family: var(--font-body);
+
+    &::placeholder {
+      color: var(--ash);
+    }
+
+    &:focus {
+      outline: 1px solid var(--moonlight);
+      border-color: var(--moonlight);
+    }
   }
 
   span {
-    color: red;
+    color: var(--destructive);
     font-size: 0.875rem;
   }
 }
@@ -38,24 +108,35 @@ body {
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 
   button {
-    padding: 0.5rem;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--primary-color);
-    color: white;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--blood);
+    border-radius: var(--radius-sm);
+    background-color: var(--blood);
+    color: var(--bone);
+    font-family: var(--font-body);
     cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--blood-glow);
+      border-color: var(--blood-glow);
+    }
 
     &:disabled {
-      background-color: #ccc;
+      background-color: var(--smoke);
+      border-color: var(--smoke);
+      color: var(--ash);
       cursor: not-allowed;
     }
   }
 
   span {
-    color: red;
+    color: var(--destructive);
     font-size: 0.875rem;
   }
 }

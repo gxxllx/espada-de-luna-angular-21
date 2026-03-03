@@ -1,10 +1,11 @@
 import { Component, inject, input, effect, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ProductService } from '@/app/core/services/product.service';
 import { Product as ProductModel } from '@/app/core/models/product.models';
 
 @Component({
   selector: 'app-collections',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './collections.html',
   styleUrls: ['./collections.scss'],
 })
