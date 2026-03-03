@@ -1,34 +1,74 @@
-<section class="product">
-  <div class="product-container">
-    <img [src]="product()?.image_url" alt="{{ product()?.product_name }}" />
-    <div>
-      <h1>{{ product()?.product_name }}</h1>
-      <p>{{ product()?.product_description }}</p>
+@if (product(); as prod) {
+  <section class="product">
+    <div class="product__gallery">
+      <img class="product__image" [src]="prod.image_url" [alt]="prod.product_name" />
+    </div>
 
-      <div class="variants-container">
-        @for (variant of variants(); track variant.id) {
-          <button
-            (click)="selectedVariantIndex.set(variants().indexOf(variant))"
-            class="variants-container__button"
-          >
-            {{ variants().indexOf(variant) }}
-          </button>
-        }
-        @if (variants()[selectedVariantIndex()]) {
-          <div class="variants-container__variant">
-            <p>Stock: {{ variants()[selectedVariantIndex()].stock }}</p>
-            <p>Size: {{ variants()[selectedVariantIndex()].size_id }}</p>
-            <p>
-              Precio:
-              {{
-                variants()[selectedVariantIndex()].sale_price
-                  ? variants()[selectedVariantIndex()].sale_price
-                  : product()?.price
-              }}
-            </p>
-          </div>
+    <div class="product__details">
+      <h1 class="product__name">{{ prod.product_name }}</h1>
+
+      <div class="product__price-block">
+        @if (hasSale()) {
+          <span class="product__price product__price--old">{{ prod.price.toFixed(2) }}€</span>
+          <span class="product__price product__price--sale">{{ activePrice().toFixed(2) }}€</span>
+        } @else {
+          <span class="product__price">{{ activePrice().toFixed(2) }}€</span>
         }
       </div>
+
+      <p class="product__description">{{ prod.product_description }}</p>
+
+      <!-- Color selector -->
+      @if (uniqueColors().length > 0) {
+        <div class="product__option">
+          <span class="product__option-label">Color</span>
+          <div class="product__swatches">
+            @for (color of uniqueColors(); track color.color_id) {
+              <button
+                class="swatch"
+                [class.swatch--active]="selectedColorId() === color.color_id"
+                [style.--swatch-color]="color.color_hex"
+                [attr.aria-label]="color.color_name"
+                [title]="color.color_name"
+                (click)="selectColor(color.color_id)"
+              ></button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Size selector -->
+      @if (uniqueSizes().length > 0) {
+        <div class="product__option">
+          <span class="product__option-label">Size</span>
+          <div class="product__sizes">
+            @for (size of uniqueSizes(); track size.size_id) {
+              <button
+                class="size-btn"
+                [class.size-btn--active]="selectedSizeId() === size.size_id"
+                (click)="selectSize(size.size_id)"
+              >
+                {{ size.size_name }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Stock info -->
+      @if (activeVariant(); as variant) {
+        <p class="product__stock" [class.product__stock--out]="variant.stock === 0">
+          {{ variant.stock > 0 ? 'In stock' : 'Out of stock' }}
+        </p>
+      }
+
+      <!-- Add to cart -->
+      <button
+        class="product__add-btn"
+        [disabled]="!activeVariant() || activeVariant()!.stock === 0"
+      >
+        Add to cart
+      </button>
     </div>
-  </div>
-</section>
+  </section>
+}
