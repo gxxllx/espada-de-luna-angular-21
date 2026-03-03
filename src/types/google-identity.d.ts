@@ -14,6 +14,7 @@ declare namespace GoogleIdentity {
     theme?: 'outline' | 'filled_blue' | 'filled_black';
     size?: 'large' | 'medium' | 'small';
     shape?: 'rectangular' | 'pill' | 'circle' | 'square';
+    width?: number;
   }
 }
 

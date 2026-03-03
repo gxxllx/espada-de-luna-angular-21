@@ -54,9 +54,10 @@ export class Login {
     const buttonElement = this.googleBtn()?.nativeElement;
     if (buttonElement) {
       google.accounts.id.renderButton(buttonElement, {
-        theme: 'filled_black',
+        theme: 'outline',
         size: 'large',
-        shape: 'pill',
+        shape: 'rectangular',
+        width: 320,
       });
     }
   }
