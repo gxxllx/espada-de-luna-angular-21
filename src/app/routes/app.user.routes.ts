@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../core/guards/auth.guard';
+import { authGuard, authGuardLoggedIn } from '../core/guards/auth.guard';
 
 export const USER_ROUTES: Routes = [
   {
@@ -13,10 +13,12 @@ export const USER_ROUTES: Routes = [
       {
         path: 'login',
         loadComponent: () => import('../features/auth/login/login').then((m) => m.Login),
+        canActivate: [authGuardLoggedIn],
       },
       {
         path: 'register',
         loadComponent: () => import('../features/auth/register/register').then((m) => m.Register),
+        canActivate: [authGuardLoggedIn],
       },
       {
         path: 'profile',

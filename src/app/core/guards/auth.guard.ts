@@ -18,3 +18,18 @@ export const authGuard: CanActivateFn = (_route, _state) => {
   router.navigate(['/login']);
   return false;
 };
+
+export const authGuardLoggedIn: CanActivateFn = (_route, _state) => {
+  const router = inject(Router);
+
+  const hasToken = document.cookie
+    .split(';')
+    .some((cookie) => cookie.trim().startsWith('access_token='));
+
+  if (!hasToken) {
+    return true;
+  }
+
+  router.navigate(['/profile']);
+  return false;
+};
