@@ -15,7 +15,13 @@ export class ProductService {
   private readonly TTL = 60 * 60 * 1000; // 1 hora
 
   getAll(): Observable<ApiResponse<Product[]>> {
-    return this.api.get<Product[]>(`${this.routes.BASE}`);
+    const key = 'products:all';
+    const cached = this.cache.get<ApiResponse<Product[]>>(key, this.TTL);
+    if (cached) return of(cached);
+
+    return this.api
+      .get<Product[]>(`${this.routes.BASE}`)
+      .pipe(tap((res) => this.cache.set(key, res)));
   }
 
   getById(id: number): Observable<ApiResponse<Product>> {
