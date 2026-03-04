@@ -75,8 +75,15 @@ export class Login {
 
       this.api.login(payload).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
-          this.router.navigate(['collections/all']);
+          if (response.requires2FA) {
+            this.api.pending2FACredentials.set(payload);
+            if (response.QRCode) {
+              this.api.pending2FAQRCode.set(response.QRCode);
+            }
+            void this.router.navigate(['login', '2fa']);
+          } else {
+            void this.router.navigate(['collections/all']);
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.handleLoginError(err);

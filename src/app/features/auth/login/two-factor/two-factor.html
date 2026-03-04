@@ -1,0 +1,38 @@
+@if (showQrDialog()) {
+  <div class="two-factor-qr-overlay">
+    <div class="two-factor-qr-dialog">
+      <button class="two-factor-qr-dialog__close" type="button" (click)="closeQrDialog()">✕</button>
+      <h2 class="two-factor-qr-dialog__title">Set up Authenticator</h2>
+      <p class="two-factor-qr-dialog__subtitle">Scan this QR code with your authenticator app</p>
+      <img class="two-factor-qr-dialog__img" [src]="qrCode()" alt="2FA QR Code" />
+    </div>
+  </div>
+}
+
+<div class="two-factor">
+  <h2 class="two-factor__title">Two-Factor Authentication</h2>
+  <p class="two-factor__subtitle">Enter the 6-digit code from your authenticator app</p>
+
+  @if (serverError()) {
+    <p class="two-factor__error">{{ serverError() }}</p>
+  }
+
+  <div class="two-factor__otp" (paste)="onOtpPaste($event)">
+    @for (digit of otpDigits(); track $index) {
+      <input
+        #otpInput
+        type="text"
+        inputmode="numeric"
+        maxlength="1"
+        class="two-factor__input"
+        [disabled]="verifying()"
+        (input)="onOtpInput($index, $event)"
+        (keydown)="onOtpKeydown($index, $event)"
+      />
+    }
+  </div>
+
+  @if (verifying()) {
+    <p class="two-factor__verifying">Verifying...</p>
+  }
+</div>

@@ -1,0 +1,133 @@
+.two-factor-qr-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(0 0 0 / 70%);
+}
+
+.two-factor-qr-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  border: 1px solid var(--steel);
+  border-radius: var(--radius-md);
+  background-color: var(--obsidian);
+  text-align: center;
+  max-width: 22rem;
+
+  &__close {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: none;
+    border: none;
+    color: var(--ash);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    line-height: 1;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--moonlight);
+    }
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+  }
+
+  &__subtitle {
+    font-size: 0.85rem;
+    color: var(--ash);
+    letter-spacing: 0.03em;
+  }
+
+  &__img {
+    width: 12rem;
+    height: 12rem;
+    border-radius: var(--radius-sm);
+    background-color: #fff;
+    padding: var(--space-sm);
+  }
+}
+
+.two-factor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 24rem;
+  margin: var(--space-2xl) auto;
+  padding: var(--space-xl);
+  border: 1px solid var(--steel);
+  border-radius: var(--radius-md);
+  background-color: var(--obsidian);
+  text-align: center;
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+  }
+
+  &__subtitle {
+    font-size: 0.85rem;
+    color: var(--ash);
+    letter-spacing: 0.03em;
+  }
+
+  &__error {
+    font-size: 0.8rem;
+    color: var(--error, #e74c3c);
+  }
+
+  &__otp {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    margin: var(--space-md) 0;
+  }
+
+  &__input {
+    width: 2.8rem;
+    height: 3.4rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1px solid var(--steel);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--bone);
+    outline: none;
+    caret-color: transparent;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      border-color: var(--moonlight);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+
+  &__verifying {
+    font-size: 0.85rem;
+    color: var(--ash);
+    letter-spacing: 0.03em;
+  }
+}

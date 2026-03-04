@@ -6,6 +6,8 @@ import { environment } from '@/environments/environment';
 export interface ApiResponse<T> {
   data: T;
   message?: string;
+  QRCode?: string;
+  requires2FA?: boolean;
 }
 
 @Injectable({

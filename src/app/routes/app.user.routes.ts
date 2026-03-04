@@ -16,6 +16,11 @@ export const USER_ROUTES: Routes = [
         canActivate: [authGuardLoggedIn],
       },
       {
+        path: 'login/2fa',
+        loadComponent: () =>
+          import('../features/auth/login/two-factor/two-factor').then((m) => m.TwoFactor),
+      },
+      {
         path: 'register',
         loadComponent: () => import('../features/auth/register/register').then((m) => m.Register),
         canActivate: [authGuardLoggedIn],

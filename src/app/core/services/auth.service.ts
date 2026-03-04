@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { ApiService, ApiResponse } from '../api';
 import { ENDPOINTS } from '../constants/endpoints';
 import { User, UserLogin, UserRegister } from '@/app/core/models/user.models';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,10 +10,29 @@ export class AuthService {
   private readonly routes = ENDPOINTS.USER;
   public currentUser = signal<User | null>(null);
   public isLoggedIn = signal(false);
+  public pending2FAQRCode = signal<string | null>(null);
+  public pending2FACredentials = signal<UserLogin | null>(null);
 
   login(credentials: UserLogin): Observable<ApiResponse<User>> {
     return this.api
       .post<User, UserLogin>(`${this.routes.BASE}/${this.routes.LOGIN}`, credentials)
+      .pipe(
+        switchMap((res) => {
+          if (!res.requires2FA) {
+            this.isLoggedIn.set(true);
+            this.loadCurrentUser();
+          }
+          return of(res);
+        }),
+      );
+  }
+
+  verify2FA(credentials: UserLogin | null, token: string): Observable<ApiResponse<User>> {
+    return this.api
+      .post<
+        User,
+        UserLogin | { token: string }
+      >(`${this.routes.BASE}/${this.routes.VERIFY_2FA}`, credentials ? { ...credentials, token } : { token })
       .pipe(
         tap(() => {
           this.isLoggedIn.set(true);
