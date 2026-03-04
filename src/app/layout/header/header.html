@@ -22,7 +22,37 @@
 
     <div class="header__group header__group--right">
       <a class="header__link" routerLink="/cart">Cart</a>
-      <a class="header__link" routerLink="/profile">Account</a>
+
+      @if (isLoggedIn()) {
+        <div class="header__account">
+          <button
+            class="header__link header__account-trigger"
+            type="button"
+            (click)="toggleAccountMenu()"
+            [attr.aria-expanded]="accountMenuOpen()"
+            aria-haspopup="true"
+          >
+            Account
+          </button>
+
+          @if (accountMenuOpen()) {
+            <div class="header__account-dialog" aria-label="Account menu">
+              <p class="header__account-name">{{ currentUser()?.first_name }}</p>
+              <a
+                class="header__account-link"
+                routerLink="/profile"
+                (click)="accountMenuOpen.set(false)"
+                >My profile</a
+              >
+              <button class="header__account-logout" type="button" (click)="logout()">
+                Log out
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a class="header__link" routerLink="/login">Account</a>
+      }
     </div>
   </nav>
 </header>

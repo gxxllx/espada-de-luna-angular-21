@@ -138,3 +138,79 @@
     outline: none;
   }
 }
+
+// Account dropdown
+.header__account {
+  position: relative;
+}
+
+.header__account-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.header__account-dialog {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  z-index: 10;
+  min-width: 11rem;
+  padding: var(--space-md);
+  background-color: var(--obsidian);
+  border: 1px solid var(--steel-strong);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.75rem;
+    right: 0;
+    width: 100%;
+    height: 0.75rem;
+  }
+}
+
+.header__account-name {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--bone);
+  letter-spacing: 0.03em;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--steel);
+}
+
+.header__account-link {
+  font-size: 0.8rem;
+  color: var(--mist);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--moonlight);
+  }
+}
+
+.header__account-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--mist);
+  letter-spacing: 0.03em;
+  padding: 0;
+  text-align: left;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--moonlight);
+  }
+}
