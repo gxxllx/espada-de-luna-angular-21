@@ -10,4 +10,13 @@
 .page {
   flex: 1;
   margin: 0 var(--app-margins);
+
+  &--admin {
+    margin-left: 220px;
+    transition: margin-left 0.25s ease;
+
+    &-collapsed {
+      margin-left: 60px;
+    }
+  }
 }

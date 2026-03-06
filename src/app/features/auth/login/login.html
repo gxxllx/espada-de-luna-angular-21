@@ -6,6 +6,7 @@
     autoComplete="username"
     controlName="email"
     (input)="serverEmailError.set(null)"
+    (autofilled)="loginForm.get('email')?.setValue($event)"
     [showError]="!!serverEmailError()"
     [errorMessage]="serverEmailError() || 'Formato de email inválido'"
   />
@@ -17,6 +18,7 @@
     autoComplete="current-password"
     controlName="user_password"
     (input)="serverPasswordError.set(null)"
+    (autofilled)="loginForm.get('user_password')?.setValue($event)"
     [showError]="!!serverPasswordError()"
     [errorMessage]="serverPasswordError() || 'Campo requerido'"
   />
@@ -29,9 +31,11 @@
     [errorMessage]="serverError() || 'Error de autenticación'"
   />
 
-  <div class="login-form__divider">
-    <span>or</span>
-  </div>
+  @if (!isAdmin) {
+    <div class="login-form__divider">
+      <span>or</span>
+    </div>
 
-  <div #googleBtn class="google-auth-button"></div>
+    <div #googleBtn class="google-auth-button"></div>
+  }
 </form>

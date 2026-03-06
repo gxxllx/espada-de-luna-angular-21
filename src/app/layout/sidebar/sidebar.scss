@@ -1,0 +1,187 @@
+$sidebar-width: 220px;
+$sidebar-collapsed-width: 60px;
+$transition-speed: 0.25s;
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: $sidebar-width;
+  height: 100vh;
+  background-color: var(--obsidian);
+  border-right: 1px solid var(--steel);
+  transition: width $transition-speed ease;
+  overflow: hidden;
+
+  &--collapsed {
+    width: $sidebar-collapsed-width;
+
+    .sidebar__header {
+      justify-content: center;
+    }
+
+    .sidebar__link,
+    .sidebar__admin,
+    .sidebar__logout,
+    .sidebar__theme-toggle {
+      justify-content: center;
+      padding-inline: 0;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--steel);
+    min-height: 56px;
+  }
+
+  &__logo {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--mist);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    transition:
+      color $transition-speed ease,
+      background-color $transition-speed ease;
+
+    &:hover {
+      color: var(--bone);
+      background-color: var(--onyx);
+    }
+  }
+
+  &__nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    color: var(--mist);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      color $transition-speed ease,
+      background-color $transition-speed ease;
+
+    &:hover {
+      color: var(--bone);
+      background-color: var(--onyx);
+    }
+
+    &--active {
+      color: var(--bone);
+      background-color: var(--onyx);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    border-top: 1px solid var(--steel);
+  }
+
+  &__admin {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--bone);
+    white-space: nowrap;
+    overflow: hidden;
+
+    .sidebar__label {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+
+  &__logout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    margin-top: var(--space-sm);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--mist);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    transition:
+      color $transition-speed ease,
+      background-color $transition-speed ease;
+
+    &:hover {
+      color: var(--destructive);
+      background-color: var(--onyx);
+    }
+  }
+
+  &__theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--mist);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    transition:
+      color $transition-speed ease,
+      background-color $transition-speed ease;
+
+    &:hover {
+      color: var(--bone);
+      background-color: var(--onyx);
+    }
+  }
+}

@@ -1,19 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { environment } from '@/environments/environment';
+import { map } from 'rxjs';
+
+const hasAccessToken = (): boolean =>
+  document.cookie.split(';').some((cookie) => cookie.trim().startsWith('access_token='));
 
 export const authGuard: CanActivateFn = (_route, _state) => {
   const router = inject(Router);
 
-  const hasToken = document.cookie
-    .split(';')
-    .some((cookie) => cookie.trim().startsWith('access_token='));
-
-  if (hasToken) {
+  if (hasAccessToken()) {
     return true;
   }
-
-  // Si queremos guardar la URL de destino
-  // podemos utilizar el state y el router
 
   router.navigate(['/login']);
   return false;
@@ -21,15 +20,42 @@ export const authGuard: CanActivateFn = (_route, _state) => {
 
 export const authGuardLoggedIn: CanActivateFn = (_route, _state) => {
   const router = inject(Router);
+  const isAdmin = environment.isAdmin;
 
-  const hasToken = document.cookie
-    .split(';')
-    .some((cookie) => cookie.trim().startsWith('access_token='));
-
-  if (!hasToken) {
+  if (!hasAccessToken()) {
     return true;
   }
 
-  router.navigate(['/profile']);
+  isAdmin ? router.navigate(['/dashboard']) : router.navigate(['/profile']);
   return false;
+};
+
+export const adminGuard: CanActivateFn = (_route, _state) => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
+
+  if (!hasAccessToken()) {
+    router.navigate(['/login']);
+    return false;
+  }
+
+  const user = authService.currentUser();
+  if (user) {
+    if (user.role === 'admin') {
+      return true;
+    }
+    router.navigate(['/login']);
+    return false;
+  }
+
+  return authService.checkSession().pipe(
+    map(() => {
+      const currentUser = authService.currentUser();
+      if (currentUser?.role === 'admin') {
+        return true;
+      }
+      router.navigate(['/login']);
+      return false;
+    }),
+  );
 };

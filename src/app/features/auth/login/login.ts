@@ -21,6 +21,8 @@ export class Login {
 
   googleBtn = viewChild<ElementRef<HTMLDivElement>>('googleBtn');
 
+  isAdmin = environment.isAdmin;
+
   serverEmailError = signal<string | null>(null);
   serverPasswordError = signal<string | null>(null);
   serverError = signal<string | null>(null);

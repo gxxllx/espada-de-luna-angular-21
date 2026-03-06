@@ -1,5 +1,12 @@
-<app-header />
-<main class="page">
-  <router-outlet />
-</main>
-<app-footer />
+@if (isAdmin) {
+  <app-sidebar (collapsedChange)="sidebarCollapsed.set($event)" />
+  <main class="page page--admin" [class.page--admin-collapsed]="sidebarCollapsed()">
+    <router-outlet />
+  </main>
+} @else {
+  <app-header />
+  <main class="page">
+    <router-outlet />
+  </main>
+  <app-footer />
+}

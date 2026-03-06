@@ -15,9 +15,22 @@
     color: var(--ash);
   }
 
+  @keyframes onAutofill {
+    from {
+      /* empty */
+    }
+    to {
+      /* empty */
+    }
+  }
+
   input {
     padding: var(--space-sm) var(--space-md);
     font-size: 0.875rem;
+
+    &:-webkit-autofill {
+      animation-name: onAutofill;
+    }
     font-family: var(--font-body);
     color: var(--bone);
     background-color: var(--onyx);

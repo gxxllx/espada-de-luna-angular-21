@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ReactiveFormsModule, ControlContainer, FormGroupDirective } from '@angular/forms';
 
 @Component({
@@ -17,4 +17,12 @@ export class Input {
   autoComplete = input<string>('off');
   showError = input<boolean>(false);
   errorMessage = input<string>('');
+  autofilled = output<string>();
+
+  onAnimationStart(event: AnimationEvent) {
+    if (event.animationName === 'onAutofill') {
+      const target = event.target as HTMLInputElement;
+      this.autofilled.emit(target.value);
+    }
+  }
 }

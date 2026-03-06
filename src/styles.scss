@@ -46,8 +46,35 @@
   --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+// ─── Light theme ───
+:root[data-theme='light'] {
+  --void: #f4f5f7;
+  --obsidian: #ffffff;
+  --onyx: #ebedf0;
+  --smoke: #d1d5db;
+
+  --bone: #1a1a2e;
+  --mist: #4a4a5a;
+  --ash: #6b7280;
+
+  --steel: rgba(0, 0, 0, 0.08);
+  --steel-strong: rgba(0, 0, 0, 0.15);
+
+  --moonlight: #6c63ff;
+  --blood: #9b2335;
+  --blood-glow: #b82a40;
+
+  --destructive: #dc2626;
+  --success: #16a34a;
+  --warning: #d97706;
+}
+
 html {
   color-scheme: dark;
+
+  &[data-theme='light'] {
+    color-scheme: light;
+  }
 }
 
 html,
