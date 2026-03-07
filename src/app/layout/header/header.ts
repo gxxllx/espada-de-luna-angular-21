@@ -56,7 +56,7 @@ export class Header {
     this.authService.logout().subscribe({
       next: () => {
         this.accountMenuOpen.set(false);
-        void this.router.navigate(['/login']);
+        this.router.navigate(['/login']);
       },
       error: (err) => console.error('Logout failed:', err),
     });

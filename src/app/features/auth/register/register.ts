@@ -110,8 +110,8 @@ export class Register {
       const { user_password_confirm, ...payload } = this.registerForm.getRawValue();
 
       this.api.register(payload as UserRegister).subscribe({
-        next: (response) => {
-          void this.router.navigate(['collections/all']);
+        next: () => {
+          this.router.navigate(['collections/all']);
         },
         error: (err: HttpErrorResponse) => {
           this.handleRegisterError(err);

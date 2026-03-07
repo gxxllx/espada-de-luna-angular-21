@@ -36,7 +36,7 @@ export class Sidebar {
   onLogout(): void {
     this.authService.logout().subscribe({
       next: () => {
-        void this.router.navigate(['/login']);
+        this.router.navigate(['/login']);
       },
       error: (err) => console.error('Logout failed:', err),
     });

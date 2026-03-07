@@ -82,9 +82,9 @@ export class Login {
             if (response.QRCode) {
               this.api.pending2FAQRCode.set(response.QRCode);
             }
-            void this.router.navigate(['login', '2fa']);
+            this.router.navigate(['login', '2fa']);
           } else {
-            void this.router.navigate(['collections/all']);
+            this.router.navigate(['collections/all']);
           }
         },
         error: (err: HttpErrorResponse) => {
