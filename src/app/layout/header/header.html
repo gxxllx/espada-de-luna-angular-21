@@ -89,6 +89,14 @@
 
         @if (mobileCollectionsOpen()) {
           <ul class="header__mobile-collections-menu" aria-label="Collections menu">
+            <li>
+              <a
+                class="header__mobile-link"
+                [routerLink]="['/collections']"
+                (click)="closeMobileMenu()"
+                >All</a
+              >
+            </li>
             @for (item of categories.value() ?? []; track item.id) {
               <li>
                 <a
