@@ -13,7 +13,7 @@
 @media (max-width: 640px) {
   .login-form {
     max-width: 100%;
-    margin: var(--space-lg);
+    margin: var(--space-lg) auto;
     padding: var(--space-lg);
   }
 
@@ -22,16 +22,31 @@
   }
 
   .google-auth-button {
-    width: 100% !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    ::ng-deep {
+      iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      div[role='button'] {
+        width: 100% !important;
+      }
+    }
   }
 
-  .google-auth-button button {
-    width: 100% !important;
+  .login-form__register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
   }
 
-  .google-auth-button iframe {
-    width: 100% !important;
-    max-width: 100% !important;
+  .login-form__register a {
+    display: block;
   }
 }
 

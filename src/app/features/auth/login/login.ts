@@ -59,7 +59,7 @@ export class Login {
         theme: 'outline',
         size: 'large',
         shape: 'rectangular',
-        width: 320,
+        width: 300,
       });
     }
   }
