@@ -69,7 +69,11 @@
   </nav>
 
   @if (mobileMenuOpen()) {
-    <div class="header__overlay" (click)="closeMobileMenu()"></div>
+    <div
+      class="header__overlay"
+      (click)="closeMobileMenu()"
+      (keydown.enter)="closeMobileMenu()"
+    ></div>
 
     <nav class="header__mobile-menu" aria-label="Mobile navigation">
       <div class="header__mobile-section">
