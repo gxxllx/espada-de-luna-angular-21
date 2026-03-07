@@ -10,6 +10,31 @@
   background-color: var(--obsidian);
 }
 
+@media (max-width: 640px) {
+  .login-form {
+    max-width: 100%;
+    margin: var(--space-lg);
+    padding: var(--space-lg);
+  }
+
+  .login-form::before {
+    font-size: 1.1rem;
+  }
+
+  .google-auth-button {
+    width: 100% !important;
+  }
+
+  .google-auth-button button {
+    width: 100% !important;
+  }
+
+  .google-auth-button iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 .login-form::before {
   content: 'Sign In';
   display: block;
@@ -42,5 +67,26 @@
     flex: 1;
     height: 1px;
     background-color: var(--steel);
+  }
+}
+
+.login-form__register {
+  text-align: center;
+
+  .login-form__register-link {
+    color: var(--ash);
+    font-size: 0.875rem;
+  }
+
+  a {
+    color: var(--bone);
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #8a2be2;
+    }
   }
 }

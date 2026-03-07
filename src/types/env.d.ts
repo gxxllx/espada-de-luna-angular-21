@@ -3,6 +3,7 @@ declare interface Env {
   readonly NODE_ENV: string;
   readonly NG_APP_API_URL: string;
   readonly NG_APP_GOOGLE_CLIENT_ID: string;
+  readonly NG_APP_AWS_S3_BUCKET: string;
   [key: string]: string | undefined;
 }
 

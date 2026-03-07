@@ -1,5 +1,5 @@
 import { Component, inject, signal, afterNextRender, viewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Input } from '@/app/shared/components/input/input';
@@ -10,7 +10,7 @@ import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, Input, Button],
+  imports: [ReactiveFormsModule, RouterLink, Input, Button],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })

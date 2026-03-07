@@ -1,6 +1,18 @@
 <header class="header">
   <nav class="header__nav" aria-label="Main navigation">
     <div class="header__group header__group--left">
+      <button
+        class="header__hamburger"
+        type="button"
+        (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Toggle navigation menu"
+      >
+        <span class="header__hamburger-line"></span>
+        <span class="header__hamburger-line"></span>
+        <span class="header__hamburger-line"></span>
+      </button>
+
       <div class="header__dropdown">
         <a class="header__link header__link--trigger" routerLink="/collections">Collections</a>
         <ul class="header__dropdown-menu" aria-label="Collections menu">
@@ -55,4 +67,74 @@
       }
     </div>
   </nav>
+
+  @if (mobileMenuOpen()) {
+    <div class="header__overlay" (click)="closeMobileMenu()"></div>
+
+    <nav class="header__mobile-menu" aria-label="Mobile navigation">
+      <div class="header__mobile-section">
+        <button
+          class="header__mobile-collections-trigger"
+          type="button"
+          (click)="toggleMobileCollections()"
+          [attr.aria-expanded]="mobileCollectionsOpen()"
+        >
+          Collections
+          <span class="header__mobile-arrow">›</span>
+        </button>
+
+        @if (mobileCollectionsOpen()) {
+          <ul class="header__mobile-collections-menu" aria-label="Collections menu">
+            @for (item of categories.value() ?? []; track item.id) {
+              <li>
+                <a
+                  class="header__mobile-link"
+                  [routerLink]="['/collections', item.slug]"
+                  (click)="closeMobileMenu()"
+                >
+                  {{ item.category_name }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <a class="header__mobile-link" routerLink="/about" (click)="closeMobileMenu()">About</a>
+      <a class="header__mobile-link" routerLink="/cart" (click)="closeMobileMenu()">Cart</a>
+
+      <div class="header__mobile-divider"></div>
+
+      @if (isLoggedIn()) {
+        <div class="header__mobile-section">
+          <button
+            class="header__mobile-account-trigger"
+            type="button"
+            (click)="toggleMobileAccount()"
+            [attr.aria-expanded]="mobileAccountOpen()"
+          >
+            {{ currentUser()?.first_name || 'Account' }}
+            <span class="header__mobile-arrow">›</span>
+          </button>
+
+          @if (mobileAccountOpen()) {
+            <div class="header__mobile-account-menu">
+              <a class="header__mobile-link" routerLink="/profile" (click)="closeMobileMenu()">
+                My profile
+              </a>
+              <button
+                class="header__mobile-link header__mobile-logout"
+                type="button"
+                (click)="logout()"
+              >
+                Log out
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a class="header__mobile-link" routerLink="/login" (click)="closeMobileMenu()">Account</a>
+      }
+    </nav>
+  }
 </header>

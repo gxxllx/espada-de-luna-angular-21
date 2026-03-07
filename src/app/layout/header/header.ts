@@ -26,9 +26,30 @@ export class Header {
   isLoggedIn = this.authService.isLoggedIn;
   currentUser = this.authService.currentUser;
   accountMenuOpen = signal(false);
+  mobileMenuOpen = signal(false);
+  mobileCollectionsOpen = signal(false);
+  mobileAccountOpen = signal(false);
 
   toggleAccountMenu(): void {
     this.accountMenuOpen.update((open) => !open);
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((open) => !open);
+  }
+
+  toggleMobileCollections(): void {
+    this.mobileCollectionsOpen.update((open) => !open);
+  }
+
+  toggleMobileAccount(): void {
+    this.mobileAccountOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+    this.mobileCollectionsOpen.set(false);
+    this.mobileAccountOpen.set(false);
   }
 
   logout(): void {

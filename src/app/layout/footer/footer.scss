@@ -32,3 +32,41 @@
     gap: var(--space-md);
   }
 }
+
+@media (max-width: 768px) {
+  .footer-nav {
+    flex-direction: column;
+    gap: var(--space-lg);
+    text-align: center;
+    padding: var(--space-md) var(--app-margins);
+
+    ul {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    div {
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-nav {
+    font-size: 0.75rem;
+    padding: var(--space-md) var(--space-lg);
+
+    ul {
+      gap: var(--space-sm);
+    }
+
+    div {
+      gap: var(--space-sm);
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Input } from '@/app/shared/components/input/input';
 import { Button } from '@/app/shared/components/button/button';
@@ -14,19 +15,24 @@ import { AuthService } from '@/app/core/services/auth.service';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, Input, Button],
+  imports: [ReactiveFormsModule, RouterLink, Input, Button],
   templateUrl: './register.html',
   styleUrls: ['./register.scss'],
 })
 export class Register {
   private readonly api = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   serverErrorMessage = signal<string | null>(null);
   passwordStrength = signal({ width: '1%', color: '#d73f40' });
+  showFirstNameError = signal(false);
+  showLastNameError = signal(false);
 
   registerForm = this.fb.group(
     {
+      first_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      last_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       user_password: ['', Validators.required],
       user_password_confirm: ['', Validators.required],
@@ -37,6 +43,26 @@ export class Register {
   constructor() {
     this.registerForm.get('user_password')?.valueChanges.subscribe((value) => {
       this.updatePasswordStrength(value || '');
+    });
+
+    this.registerForm.get('first_name')?.valueChanges.subscribe((value) => {
+      this.filterNameInput('first_name', value || '');
+
+      if (value && value.length >= 2) {
+        this.showFirstNameError.set(false);
+      } else {
+        this.showFirstNameError.set(true);
+      }
+    });
+
+    this.registerForm.get('last_name')?.valueChanges.subscribe((value) => {
+      this.filterNameInput('last_name', value || '');
+
+      if (value && value.length >= 2) {
+        this.showLastNameError.set(false);
+      } else {
+        this.showLastNameError.set(true);
+      }
     });
   }
 
@@ -69,6 +95,15 @@ export class Register {
     });
   }
 
+  private filterNameInput(fieldName: string, value: string) {
+    const control = this.registerForm.get(fieldName);
+    const filteredValue = value.replaceAll(/[^a-záéíóúñüA-ZÁÉÍÓÚÑÜ\s]/g, '');
+
+    if (filteredValue !== value) {
+      control?.setValue(filteredValue, { emitEvent: false });
+    }
+  }
+
   onSubmit() {
     this.serverErrorMessage.set(null);
     if (this.registerForm.valid) {
@@ -76,7 +111,7 @@ export class Register {
 
       this.api.register(payload as UserRegister).subscribe({
         next: (response) => {
-          console.log('Register successful:', response);
+          void this.router.navigate(['collections/all']);
         },
         error: (err: HttpErrorResponse) => {
           this.handleRegisterError(err);
