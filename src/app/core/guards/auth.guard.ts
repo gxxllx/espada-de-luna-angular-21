@@ -1,11 +1,16 @@
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { environment } from '@/environments/environment';
 import { map } from 'rxjs';
 
-const hasAccessToken = (): boolean =>
-  document.cookie.split(';').some((cookie) => cookie.trim().startsWith('access_token='));
+const hasAccessToken = (): boolean => {
+  const platformId = inject(PLATFORM_ID);
+  if (!isPlatformBrowser(platformId)) return false;
+
+  return document.cookie.split(';').some((cookie) => cookie.trim().startsWith('access_token='));
+};
 
 export const authGuard: CanActivateFn = (_route, _state) => {
   const router = inject(Router);
