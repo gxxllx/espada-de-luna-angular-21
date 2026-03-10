@@ -3,8 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@/environments/environment';
 
+interface Meta {
+  current_page: number;
+  items: number;
+  total_items: number;
+  total_pages: number;
+}
+
 export interface ApiResponse<T> {
   data: T;
+  meta?: Meta;
   message?: string;
   QRCode?: string;
   requires2FA?: boolean;
