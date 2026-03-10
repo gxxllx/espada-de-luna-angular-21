@@ -1,0 +1,41 @@
+<footer class="pagination">
+  <span class="pagination__summary"
+    >Items por pagina: {{ itemsPerPage() }} · {{ totalItems() }} total</span
+  >
+
+  <div class="pagination__controls">
+    <button
+      type="button"
+      class="pagination__button"
+      (click)="goToPreviousPage()"
+      [disabled]="disabled() || currentPage() <= 1"
+      aria-label="Ir a la pagina anterior"
+    >
+      Anterior
+    </button>
+
+    <div class="pagination__pages" aria-label="Selector de pagina">
+      @for (page of visiblePages(); track page) {
+        <button
+          type="button"
+          class="pagination__button"
+          [class.pagination__button--active]="page === currentPage()"
+          [disabled]="disabled()"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="pagination__button"
+      (click)="goToNextPage()"
+      [disabled]="disabled() || currentPage() >= totalPages()"
+      aria-label="Ir a la pagina siguiente"
+    >
+      Siguiente
+    </button>
+  </div>
+</footer>
