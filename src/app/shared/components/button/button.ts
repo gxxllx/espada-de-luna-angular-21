@@ -1,12 +1,12 @@
-import { Component, input } from '@angular/core';
-import { ReactiveFormsModule, ControlContainer, FormGroupDirective } from '@angular/forms';
+import { Component, input, output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'button-field',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './button.html',
   styleUrls: ['./button.scss'],
-  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })
 export class Button {
   label = input.required<string>();
@@ -14,5 +14,6 @@ export class Button {
   showError = input<boolean>(false);
   errorMessage = input<string>('');
   disabled = input<boolean>(false);
-  onClick = input<() => void>(() => {});
+  fullWidth = input<boolean>(true);
+  readonly clicked = output<void>();
 }

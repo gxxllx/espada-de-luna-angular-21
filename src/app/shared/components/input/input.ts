@@ -1,12 +1,16 @@
-import { Component, input, output } from '@angular/core';
-import { ReactiveFormsModule, ControlContainer, FormGroupDirective } from '@angular/forms';
+import { Component, inject, input, output } from '@angular/core';
+import { ReactiveFormsModule, ControlContainer } from '@angular/forms';
+
+const controlContainerFactory = () => inject(ControlContainer, { skipSelf: true, optional: true });
+type InputAttributeValue = string | number | null;
 
 @Component({
   selector: 'input-field',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './input.html',
   styleUrls: ['./input.scss'],
-  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+  viewProviders: [{ provide: ControlContainer, useFactory: controlContainerFactory }],
 })
 export class Input {
   label = input.required<string>();
@@ -17,6 +21,11 @@ export class Input {
   autoComplete = input<string>('off');
   showError = input<boolean>(false);
   errorMessage = input<string>('');
+  min = input<InputAttributeValue>(null);
+  max = input<InputAttributeValue>(null);
+  step = input<InputAttributeValue>(null);
+  maxLength = input<number | null>(null);
+  minLength = input<number | null>(null);
   autofilled = output<string>();
 
   onAnimationStart(event: AnimationEvent) {

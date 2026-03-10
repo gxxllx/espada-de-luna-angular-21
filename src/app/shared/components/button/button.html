@@ -1,5 +1,5 @@
-<div class="button-group">
-  <button [type]="type()" [disabled]="disabled()" (click)="onClick()">
+<div class="button-group" [class.button-group--auto-width]="!fullWidth()">
+  <button [type]="type()" [disabled]="disabled()" (click)="clicked.emit()">
     {{ label() }}
   </button>
   @if (showError() && errorMessage().length > 0) {

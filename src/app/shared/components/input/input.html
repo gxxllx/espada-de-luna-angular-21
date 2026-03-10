@@ -7,6 +7,11 @@
     [placeholder]="placeholder()"
     [formControlName]="controlName()"
     [autocomplete]="autoComplete()"
+    [attr.min]="min() ?? null"
+    [attr.max]="max() ?? null"
+    [attr.step]="step() ?? null"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.minlength]="minLength() ?? null"
     (animationstart)="onAnimationStart($event)"
   />
 

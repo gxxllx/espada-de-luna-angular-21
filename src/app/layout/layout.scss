@@ -12,7 +12,9 @@
   margin: 0 var(--app-margins);
 
   &--admin {
+    margin: 0;
     margin-left: 220px;
+    padding: 0;
     transition: margin-left 0.25s ease;
 
     &-collapsed {
