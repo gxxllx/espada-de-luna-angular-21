@@ -1,0 +1,257 @@
+<section class="new-product">
+  <header class="new-product__header">
+    <div>
+      <p class="new-product__eyebrow">Admin / Productos</p>
+      <h2>Nuevo producto</h2>
+      <span>Define ficha base, variantes e imagenes en un unico envio al backend.</span>
+    </div>
+
+    <button type="button" class="new-product__close" (click)="onCancel()" aria-label="Cerrar panel">
+      Cerrar
+    </button>
+  </header>
+
+  <form class="new-product__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <section class="new-product__card new-product__card--main">
+      <div class="new-product__card-header">
+        <h3>Datos base</h3>
+        <span>Campos principales del producto.</span>
+      </div>
+
+      <div class="new-product__grid new-product__grid--primary">
+        <input-field
+          class="field field--wide"
+          label="Nombre"
+          id="product_name"
+          type="text"
+          controlName="product_name"
+          placeholder="Espada de luna ceremonial"
+          [minLength]="3"
+          [showError]="isFieldInvalid('product_name')"
+          [errorMessage]="getFieldError('product_name')"
+        />
+
+        <input-field
+          class="field"
+          label="Precio"
+          id="price"
+          type="number"
+          controlName="price"
+          placeholder="79.95"
+          [min]="0.01"
+          [step]="0.01"
+          [showError]="isFieldInvalid('price')"
+          [errorMessage]="getFieldError('price')"
+        />
+
+        <label class="field">
+          <span>Categoria</span>
+          <select formControlName="category_id">
+            <option [ngValue]="null">Selecciona una categoria</option>
+            @for (category of categories(); track category.id) {
+              <option [ngValue]="category.id">{{ category.category_name }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('category_id')) {
+            <small class="field__error">{{ getFieldError('category_id') }}</small>
+          }
+        </label>
+
+        <input-field
+          class="field"
+          label="Imagen principal"
+          id="image_url"
+          type="text"
+          controlName="image_url"
+          placeholder="https://... o ruta principal"
+          [minLength]="5"
+          [showError]="isFieldInvalid('image_url')"
+          [errorMessage]="getFieldError('image_url')"
+        />
+
+        <input-field
+          class="field"
+          label="Volumen cm3"
+          id="volume_cm3"
+          type="number"
+          controlName="volume_cm3"
+          placeholder="1200"
+          [min]="1"
+          [step]="1"
+          [showError]="isFieldInvalid('volume_cm3')"
+          [errorMessage]="getFieldError('volume_cm3')"
+        />
+
+        <input-field
+          class="field"
+          label="Peso g"
+          id="weight_g"
+          type="number"
+          controlName="weight_g"
+          placeholder="850"
+          [min]="1"
+          [step]="1"
+          [showError]="isFieldInvalid('weight_g')"
+          [errorMessage]="getFieldError('weight_g')"
+        />
+
+        <label class="field field--wide">
+          <span>Descripcion</span>
+          <textarea
+            formControlName="product_description"
+            rows="5"
+            placeholder="Describe el producto, materiales y detalles importantes"
+          ></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section class="new-product__card">
+      <div class="new-product__card-header new-product__card-header--split">
+        <div>
+          <h3>Variantes</h3>
+          <span>Crea combinaciones por talla/color con su stock.</span>
+        </div>
+
+        <button type="button" class="new-product__ghost" (click)="addVariant()">
+          Anadir variante
+        </button>
+      </div>
+
+      <div class="new-product__stack" formArrayName="variants">
+        @for (variant of variantsArray.controls; track trackByIndex($index); let index = $index) {
+          <div class="new-product__row" [formGroupName]="index">
+            <input-field
+              class="field"
+              [id]="'variant-color-' + index"
+              label="Color ID"
+              type="number"
+              controlName="color_id"
+              placeholder="1"
+              [min]="1"
+              [step]="1"
+              [showError]="isVariantFieldInvalid(index, 'color_id')"
+              [errorMessage]="getVariantFieldError(index, 'color_id')"
+            />
+
+            <input-field
+              class="field"
+              [id]="'variant-size-' + index"
+              label="Size ID"
+              type="number"
+              controlName="size_id"
+              placeholder="2"
+              [min]="1"
+              [step]="1"
+              [showError]="isVariantFieldInvalid(index, 'size_id')"
+              [errorMessage]="getVariantFieldError(index, 'size_id')"
+            />
+
+            <input-field
+              class="field"
+              [id]="'variant-stock-' + index"
+              label="Stock"
+              type="number"
+              controlName="stock"
+              placeholder="10"
+              [min]="0"
+              [step]="1"
+              [showError]="isVariantFieldInvalid(index, 'stock')"
+              [errorMessage]="getVariantFieldError(index, 'stock')"
+            />
+
+            <button
+              type="button"
+              class="new-product__danger"
+              (click)="removeVariant(index)"
+              [disabled]="variantsArray.length === 1"
+            >
+              Quitar
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="new-product__card">
+      <div class="new-product__card-header new-product__card-header--split">
+        <div>
+          <h3>Imagenes</h3>
+          <span>Se enviaran como `name`, `color_id` y `order_index`.</span>
+        </div>
+
+        <button type="button" class="new-product__ghost" (click)="addImage()">Anadir imagen</button>
+      </div>
+
+      <div class="new-product__stack" formArrayName="images">
+        @for (image of imagesArray.controls; track trackByIndex($index); let index = $index) {
+          <div class="new-product__row new-product__row--images" [formGroupName]="index">
+            <input-field
+              class="field field--wide"
+              [id]="'image-name-' + index"
+              label="Nombre o ruta"
+              type="text"
+              controlName="name"
+              placeholder="productos/espada-luna/frontal.webp"
+              [showError]="isImageFieldInvalid(index, 'name')"
+              [errorMessage]="getImageFieldError(index, 'name')"
+            />
+
+            <input-field
+              class="field"
+              [id]="'image-color-' + index"
+              label="Color ID"
+              type="number"
+              controlName="color_id"
+              placeholder="Opcional"
+              [min]="1"
+              [step]="1"
+              [showError]="isImageFieldInvalid(index, 'color_id')"
+              [errorMessage]="getImageFieldError(index, 'color_id')"
+            />
+
+            <input-field
+              class="field"
+              [id]="'image-order-' + index"
+              label="Orden"
+              type="number"
+              controlName="order_index"
+              [min]="0"
+              [step]="1"
+              [showError]="isImageFieldInvalid(index, 'order_index')"
+              [errorMessage]="getImageFieldError(index, 'order_index')"
+            />
+
+            <button
+              type="button"
+              class="new-product__danger"
+              (click)="removeImage(index)"
+              [disabled]="imagesArray.length === 1"
+            >
+              Quitar
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    @if (errorMessage()) {
+      <div class="new-product__error">{{ errorMessage() }}</div>
+    }
+
+    @if (loadingCategories()) {
+      <div class="new-product__info">Cargando categorias...</div>
+    }
+
+    <footer class="new-product__actions">
+      <button type="button" class="new-product__secondary" (click)="onCancel()">Cancelar</button>
+
+      <button-field
+        label="Crear producto"
+        type="submit"
+        [fullWidth]="false"
+        [disabled]="submitting() || loadingCategories()"
+      />
+    </footer>
+  </form>
+</section>

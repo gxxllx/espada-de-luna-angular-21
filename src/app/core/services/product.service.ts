@@ -3,7 +3,12 @@ import { ApiService, ApiResponse } from '../api';
 import { CacheService } from '../cache';
 import { ENDPOINTS } from '../constants/endpoints';
 import { Observable, of, tap } from 'rxjs';
-import { Product, ProductDetail } from '../models/product.models';
+import {
+  Product,
+  ProductDetail,
+  ProductAdmin,
+  ProductCreateRequest,
+} from '../models/product.models';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +29,15 @@ export class ProductService {
       .pipe(tap((res) => this.cache.set(key, res)));
   }
 
+  getAllByAdmin(page: number, limit: number): Observable<ApiResponse<ProductAdmin[]>> {
+    const key = `products:admin:page:${page}:limit:${limit}`;
+    const cached = this.cache.get<ApiResponse<ProductAdmin[]>>(key, this.TTL);
+    if (cached) return of(cached);
+    return this.api.get<ProductAdmin[]>(
+      `${this.routes.BASE}/${this.routes.ADMIN}?page=${page}&limit=${limit}`,
+    );
+  }
+
   getById(id: number): Observable<ApiResponse<Product>> {
     return this.api.get<Product>(`${this.routes.BASE}/${id}`);
   }
@@ -40,5 +54,13 @@ export class ProductService {
 
   getBySlug(slug: string): Observable<ApiResponse<ProductDetail>> {
     return this.api.get<ProductDetail>(`${this.routes.BASE}/${this.routes.SLUG}/${slug}`);
+  }
+
+  createProduct(payload: ProductCreateRequest): Observable<ApiResponse<Product>> {
+    return this.api.post<Product, ProductCreateRequest>(`${this.routes.BASE}`, payload).pipe(
+      tap(() => {
+        this.cache.clear('products:all');
+      }),
+    );
   }
 }

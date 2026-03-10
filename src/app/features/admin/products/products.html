@@ -1,1 +1,95 @@
-<p>products works!</p>
+<section class="products-admin">
+  <header class="products-admin__header">
+    <div>
+      <h1>Gestion de productos</h1>
+      <p>Pagina {{ currentPage() }} de {{ totalPages() }} · {{ totalItems() }} productos totales</p>
+    </div>
+    <button-field
+      label="Nuevo producto"
+      type="button"
+      [fullWidth]="false"
+      (clicked)="createProduct()"
+    />
+  </header>
+
+  @if (errorMessage()) {
+    <div class="products-admin__error">{{ errorMessage() }}</div>
+  }
+
+  <div class="products-admin__table-wrap">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Imagen</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Categoria</th>
+          <th>Stock total</th>
+          <th>Variantes</th>
+          <th>Total items</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td colspan="9" class="products-table__state">Cargando productos...</td>
+          </tr>
+        } @else if (!products().length) {
+          <tr>
+            <td colspan="9" class="products-table__state">No hay productos en esta pagina.</td>
+          </tr>
+        } @else {
+          @for (product of products(); track product.id) {
+            <tr>
+              <td>{{ product.id }}</td>
+              <td>
+                @if (product.image_url) {
+                  <img
+                    class="products-table__image"
+                    [src]="product.image_url"
+                    [alt]="'Producto ' + product.product_name"
+                  />
+                } @else {
+                  <span class="products-table__no-image">Sin imagen</span>
+                }
+              </td>
+              <td class="products-table__name">{{ product.product_name }}</td>
+              <td>{{ formatPrice(product.price) }} EUR</td>
+              <td>{{ product.category_name }}</td>
+              <td>{{ product.total_stock }}</td>
+              <td>{{ product.total_variants }}</td>
+              <td>{{ product.total_items ?? product.total_stock }}</td>
+              <td>
+                <div class="products-table__actions">
+                  <button type="button" class="action" (click)="editProduct(product.id)">
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    class="action action--danger"
+                    (click)="deleteProduct(product.id)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="products-admin__pagination">
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      [totalItems]="totalItems()"
+      [itemsPerPage]="itemsPerPage()"
+      [disabled]="loading()"
+      (pageChange)="onPageChange($event)"
+    />
+  </footer>
+</section>
