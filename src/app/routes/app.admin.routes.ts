@@ -23,6 +23,11 @@ export const ADMIN_ROUTES: Routes = [
           import('../features/admin/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
+        path: 'products/new',
+        loadComponent: () =>
+          import('../features/admin/products/new-product/new-product').then((m) => m.NewProduct),
+      },
+      {
         path: 'products',
         loadComponent: () => import('../features/admin/products/products').then((m) => m.Products),
       },
