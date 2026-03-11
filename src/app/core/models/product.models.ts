@@ -30,6 +30,7 @@ export interface ProductDetail {
 
 export interface ProductCreate {
   product_name: string;
+  slug: string;
   product_description?: string;
   price: number;
   image_url?: string;
@@ -47,6 +48,7 @@ export interface ProductVariantCreate {
 export interface ProductImageCreate {
   color_id?: number;
   name: string;
+  type: string;
   order_index: number;
 }
 

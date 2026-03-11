@@ -1,19 +1,30 @@
-import { Component, computed, inject, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  output,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Category } from '@/app/core/models/category.models';
 import { ProductCreateRequest } from '@/app/core/models/product.models';
 import { CategoryService } from '@/app/core/services/category.service';
+import { ImageService } from '@/app/core/services/image.service';
 import { ProductService } from '@/app/core/services/product.service';
 import { Button } from '@/app/shared/components/button/button';
 import { Input } from '@/app/shared/components/input/input';
-import { Router } from '@angular/router';
+import { ProductImagesForm } from './product-images-form/product-images-form';
+import { of, switchMap } from 'rxjs';
 
 const optionalPositiveIntegerValidator = (control: AbstractControl): ValidationErrors | null => {
   const value = control.value;
@@ -59,13 +70,15 @@ const optionalUrlValidator = (control: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [ReactiveFormsModule, Button, Input],
+  imports: [ReactiveFormsModule, Button, Input, ProductImagesForm],
   templateUrl: './new-product.html',
   styleUrl: './new-product.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewProduct {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
+  private readonly imageService = inject(ImageService);
   private readonly categoryService = inject(CategoryService);
   private readonly router = inject(Router);
 
@@ -80,6 +93,7 @@ export class NewProduct {
 
   readonly productForm = this.fb.group({
     product_name: ['', [Validators.required, Validators.minLength(3)]],
+    slug: ['', [Validators.required, Validators.minLength(3)]],
     product_description: [''],
     price: [null as number | null, [Validators.required, Validators.min(0.01)]],
     image_url: ['', [optionalUrlValidator]],
@@ -90,13 +104,17 @@ export class NewProduct {
     images: this.fb.array([this.createImageGroup()]),
   });
 
-  readonly hasInvalidCollections = computed(() => {
-    return this.variantsArray.length === 0 || this.imagesArray.length === 0;
-  });
+  readonly hasInvalidCollections = computed(
+    () => this.variantsArray.length === 0 || this.imagesArray.length === 0,
+  );
 
   private readonly fieldErrorMessages: Record<string, Record<string, string>> = {
     product_name: {
       required: 'El nombre es obligatorio',
+      minlength: 'Minimo 3 caracteres',
+    },
+    slug: {
+      required: 'El slug es obligatorio',
       minlength: 'Minimo 3 caracteres',
     },
     price: {
@@ -126,23 +144,25 @@ export class NewProduct {
     nonNegativeInteger: 'Debe ser un entero mayor o igual que 0',
   };
 
-  private readonly imageErrorMessages: Record<string, string> = {
-    required: 'Campo obligatorio',
-    positiveInteger: 'Debe ser un entero positivo',
-    nonNegativeInteger: 'Debe ser un entero mayor o igual que 0',
-    min: 'Debe ser mayor o igual que 0',
-  };
-
   constructor() {
     this.loadCategories();
+    this.productForm.get('product_name')!.valueChanges.subscribe((value) => {
+      const slug = (value ?? '')
+        .trim()
+        .toLowerCase()
+        .replaceAll(/\s+/g, '-')
+        .replaceAll(/[^a-z0-9-]/g, '')
+        .replaceAll(/-+/g, '-');
+      this.productForm.get('slug')!.setValue(slug, { emitEvent: false });
+    });
   }
 
   get variantsArray(): FormArray {
     return this.productForm.get('variants') as FormArray;
   }
 
-  get imagesArray(): FormArray {
-    return this.productForm.get('images') as FormArray;
+  get imagesArray(): FormArray<FormGroup> {
+    return this.productForm.get('images') as FormArray<FormGroup>;
   }
 
   addVariant(): void {
@@ -152,16 +172,6 @@ export class NewProduct {
   removeVariant(index: number): void {
     if (this.variantsArray.length === 1) return;
     this.variantsArray.removeAt(index);
-  }
-
-  addImage(): void {
-    this.imagesArray.push(this.createImageGroup(this.imagesArray.length));
-  }
-
-  removeImage(index: number): void {
-    if (this.imagesArray.length === 1) return;
-    this.imagesArray.removeAt(index);
-    this.reindexImages();
   }
 
   onCancel(): void {
@@ -180,8 +190,11 @@ export class NewProduct {
     }
 
     const rawValue = this.productForm.getRawValue();
+    const filesToUpload: Array<{ index: number; file: File; name: string; type: string }> = [];
+    const imageGroupCounters = new Map<string, number>();
     const payload: ProductCreateRequest = {
       product_name: (rawValue.product_name ?? '').trim(),
+      slug: (rawValue.slug ?? '').trim(),
       product_description: this.normalizeText(rawValue.product_description),
       price: Number(rawValue.price),
       image_url: this.normalizeText(rawValue.image_url),
@@ -193,32 +206,78 @@ export class NewProduct {
         size_id: this.normalizeNumber(variant.size_id),
         stock: Number(variant.stock),
       })),
-      images: rawValue.images.map((image, index) => ({
-        color_id: this.normalizeNumber(image.color_id),
-        name: (image.name ?? '').trim(),
-        order_index: Number(image.order_index ?? index),
-      })),
+      images: rawValue.images.map((image, index) => {
+        const normalizedColorId = this.normalizeNumber(image.color_id);
+        const groupKey = normalizedColorId === undefined ? 'none' : String(normalizedColorId);
+        const orderIndex = imageGroupCounters.get(groupKey) ?? 0;
+        imageGroupCounters.set(groupKey, orderIndex + 1);
+
+        const fileControl = this.imagesArray.at(index)?.get('file')?.value;
+        if (fileControl instanceof File) {
+          filesToUpload.push({
+            index,
+            file: fileControl,
+            name: fileControl.name,
+            type: 'image/webp',
+          });
+        }
+
+        return {
+          color_id: normalizedColorId,
+          name: (image.name ?? '').trim(),
+          type: 'image/webp',
+          order_index: orderIndex,
+        };
+      }),
     };
 
     this.submitting.set(true);
 
-    this.productService.createProduct(payload).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.submitAttempted.set(false);
-        this.resetForm();
-        this.saved.emit();
-        this.router.navigate(['/products']);
-      },
-      error: () => {
-        this.submitting.set(false);
-        this.errorMessage.set('No se pudo crear el producto.');
-      },
-    });
+    const uploadFlow$ = filesToUpload.length
+      ? this.imageService.uploadImagesAndHydratePayload(payload, filesToUpload)
+      : of(payload);
+
+    uploadFlow$
+      .pipe(switchMap((readyPayload) => this.productService.createProduct(readyPayload)))
+      .subscribe({
+        next: () => {
+          this.submitting.set(false);
+          this.submitAttempted.set(false);
+          this.resetForm();
+          this.saved.emit();
+          this.router.navigate(['/products']);
+        },
+        error: (err: unknown) => {
+          this.submitting.set(false);
+          const detail = this.extractErrorMessage(err);
+          this.errorMessage.set(
+            detail
+              ? `No se pudo completar la subida/creacion: ${detail}`
+              : 'No se pudieron subir las imagenes o crear el producto.',
+          );
+        },
+      });
   }
 
-  trackByIndex(index: number): number {
-    return index;
+  private extractErrorMessage(err: unknown): string {
+    if (!err) return '';
+
+    if (err instanceof Error) {
+      return err.message;
+    }
+
+    const asRecord = err as Record<string, unknown>;
+    const errorRecord = asRecord?.['error'] as Record<string, unknown> | undefined;
+
+    if (typeof errorRecord?.['message'] === 'string') {
+      return errorRecord['message'];
+    }
+
+    if (typeof asRecord?.['message'] === 'string') {
+      return asRecord['message'];
+    }
+
+    return '';
   }
 
   isFieldInvalid(controlName: string): boolean {
@@ -242,23 +301,6 @@ export class NewProduct {
     return this.resolveErrorMessage(control, this.variantErrorMessages);
   }
 
-  isImageFieldInvalid(index: number, controlName: string): boolean {
-    const control = this.imagesArray.at(index)?.get(controlName);
-    return !!control && control.invalid && (control.touched || this.submitAttempted());
-  }
-
-  getImageFieldError(index: number, controlName: string): string {
-    const control = this.imagesArray.at(index)?.get(controlName);
-    if (controlName === 'name') {
-      return this.resolveErrorMessage(control, {
-        ...this.imageErrorMessages,
-        required: 'La imagen es obligatoria',
-      });
-    }
-
-    return this.resolveErrorMessage(control, this.imageErrorMessages);
-  }
-
   private createVariantGroup() {
     return this.fb.group({
       color_id: [null as number | null, [optionalPositiveIntegerValidator]],
@@ -271,6 +313,8 @@ export class NewProduct {
     return this.fb.group({
       color_id: [null as number | null, [optionalPositiveIntegerValidator]],
       name: ['', Validators.required],
+      type: ['image/webp', Validators.required],
+      file: [null as File | null],
       order_index: [
         orderIndex,
         [Validators.required, Validators.min(0), nonNegativeIntegerValidator],
@@ -341,11 +385,5 @@ export class NewProduct {
     this.variantsArray.push(this.createVariantGroup());
     this.imagesArray.push(this.createImageGroup());
     this.errorMessage.set('');
-  }
-
-  private reindexImages(): void {
-    this.imagesArray.controls.forEach((control, index) => {
-      control.get('order_index')?.setValue(index);
-    });
   }
 }

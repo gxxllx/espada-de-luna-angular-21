@@ -12,6 +12,10 @@ export const ENDPOINTS = {
     SEND_VERIFICATION: 'send-verification-email',
     VERIFY: 'verify-email',
   },
+  IMAGE: {
+    BASE: 'image',
+    CREATE: 'create-image',
+  },
   CATEGORY: {
     BASE: 'category',
   },

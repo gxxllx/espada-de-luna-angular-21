@@ -1,0 +1,158 @@
+<section
+  class="images-form"
+  (dragenter)="onScreenDragEnter($event)"
+  (dragover)="onScreenDragOver($event)"
+  (dragleave)="onScreenDragLeave($event)"
+  (drop)="onScreenDrop($event)"
+>
+  @if (isScreenFileDragActive()) {
+    <div class="images-form__screen-drop-hint">
+      Suelta las imagenes para elegir como insertarlas
+    </div>
+  }
+
+  <section class="images-form__card">
+    <div class="images-form__card-header images-form__card-header--split">
+      <div>
+        <h3>Imagenes</h3>
+        <span>
+          `order_index` se calcula por grupo (`color_id` o sin color). Reordena solo con flechas.
+        </span>
+      </div>
+
+      <div class="images-form__card-actions">
+        <button type="button" class="images-form__ghost" (click)="imagePicker.click()">
+          Insertar imagenes
+        </button>
+        <button type="button" class="images-form__ghost" (click)="addImage()">Anadir fila</button>
+      </div>
+    </div>
+
+    <input
+      #imagePicker
+      class="images-form__file-input"
+      type="file"
+      accept="image/webp,.webp"
+      multiple
+      (change)="onImageFilesSelected($event)"
+    />
+
+    @if (imageFormatError()) {
+      <div class="images-form__error">{{ imageFormatError() }}</div>
+    }
+
+    <div class="images-form__stack">
+      @for (image of imagesArray().controls; track image; let index = $index) {
+        <div
+          class="images-form__row images-form__row--images"
+          [class.images-form__row--group-separator]="hasGroupSeparator(index)"
+          [formGroup]="image"
+        >
+          <div class="images-form__image-order">
+            <strong>#{{ getImageOrderLabel(index) }}</strong>
+            <span>{{ getImageGroupLabel(index) }}</span>
+          </div>
+
+          <div
+            class="images-form__image-preview"
+            (dragover)="onImageRowDragOver($event)"
+            (drop)="onImageRowDrop(index, $event)"
+          >
+            @if (getImagePreview(index); as preview) {
+              <img [src]="preview" [alt]="'Preview ' + (index + 1)" />
+            } @else {
+              <span>Suelta aqui para sustituir</span>
+            }
+          </div>
+
+          <input-field
+            class="field"
+            [id]="'image-name-' + index"
+            label="Nombre o ruta"
+            type="text"
+            controlName="name"
+            placeholder="productos/espada-luna/frontal.webp"
+            [showError]="isImageFieldInvalid(index, 'name')"
+            [errorMessage]="getImageFieldError(index, 'name')"
+          />
+
+          <input-field
+            class="field"
+            [id]="'image-color-' + index"
+            label="Color ID"
+            type="number"
+            controlName="color_id"
+            placeholder="Opcional"
+            [min]="1"
+            [step]="1"
+            [showError]="isImageFieldInvalid(index, 'color_id')"
+            [errorMessage]="getImageFieldError(index, 'color_id')"
+          />
+
+          <div class="images-form__image-arrows">
+            <button
+              type="button"
+              class="images-form__arrow"
+              aria-label="Mover arriba"
+              [disabled]="!canMoveImageUp(index)"
+              (click)="moveImageUp(index)"
+            >
+              ▲
+            </button>
+            <button
+              type="button"
+              class="images-form__arrow"
+              aria-label="Mover abajo"
+              [disabled]="!canMoveImageDown(index)"
+              (click)="moveImageDown(index)"
+            >
+              ▼
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="images-form__danger"
+            (click)="removeImage(index)"
+            [disabled]="imagesArray().length === 1"
+          >
+            Quitar
+          </button>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (imageInsertDialogOpen()) {
+    <div class="images-form__dialog-backdrop">
+      <article class="images-form__dialog">
+        <h4>Insertar imagenes</h4>
+        <p>Se detectaron {{ pendingInsertCount() }} archivo(s). Elige como quieres insertarlas.</p>
+
+        <div class="images-form__dialog-actions">
+          <button
+            type="button"
+            class="images-form__secondary"
+            (click)="confirmImageInsert('append')"
+          >
+            Anadir al final
+          </button>
+
+          @if (pendingInsertTargetIndex() !== null) {
+            <button
+              type="button"
+              class="images-form__ghost"
+              (click)="confirmImageInsert('replace-target')"
+            >
+              Sustituir donde solte
+            </button>
+          }
+
+          <button type="button" class="images-form__danger" (click)="closeImageInsertDialog()">
+            Cancelar
+          </button>
+        </div>
+      </article>
+    </div>
+  }
+</section>

@@ -95,6 +95,18 @@
           [errorMessage]="getFieldError('weight_g')"
         />
 
+        <input-field
+          class="field"
+          label="Slug"
+          id="slug"
+          type="text"
+          controlName="slug"
+          placeholder="espada-de-luna-ceremonial"
+          [minLength]="3"
+          [showError]="isFieldInvalid('slug')"
+          [errorMessage]="getFieldError('slug')"
+        />
+
         <label class="field field--wide">
           <span>Descripcion</span>
           <textarea
@@ -119,7 +131,7 @@
       </div>
 
       <div class="new-product__stack" formArrayName="variants">
-        @for (variant of variantsArray.controls; track trackByIndex($index); let index = $index) {
+        @for (variant of variantsArray.controls; track variant; let index = $index) {
           <div class="new-product__row" [formGroupName]="index">
             <input-field
               class="field"
@@ -173,67 +185,7 @@
       </div>
     </section>
 
-    <section class="new-product__card">
-      <div class="new-product__card-header new-product__card-header--split">
-        <div>
-          <h3>Imagenes</h3>
-          <span>Se enviaran como `name`, `color_id` y `order_index`.</span>
-        </div>
-
-        <button type="button" class="new-product__ghost" (click)="addImage()">Anadir imagen</button>
-      </div>
-
-      <div class="new-product__stack" formArrayName="images">
-        @for (image of imagesArray.controls; track trackByIndex($index); let index = $index) {
-          <div class="new-product__row new-product__row--images" [formGroupName]="index">
-            <input-field
-              class="field field--wide"
-              [id]="'image-name-' + index"
-              label="Nombre o ruta"
-              type="text"
-              controlName="name"
-              placeholder="productos/espada-luna/frontal.webp"
-              [showError]="isImageFieldInvalid(index, 'name')"
-              [errorMessage]="getImageFieldError(index, 'name')"
-            />
-
-            <input-field
-              class="field"
-              [id]="'image-color-' + index"
-              label="Color ID"
-              type="number"
-              controlName="color_id"
-              placeholder="Opcional"
-              [min]="1"
-              [step]="1"
-              [showError]="isImageFieldInvalid(index, 'color_id')"
-              [errorMessage]="getImageFieldError(index, 'color_id')"
-            />
-
-            <input-field
-              class="field"
-              [id]="'image-order-' + index"
-              label="Orden"
-              type="number"
-              controlName="order_index"
-              [min]="0"
-              [step]="1"
-              [showError]="isImageFieldInvalid(index, 'order_index')"
-              [errorMessage]="getImageFieldError(index, 'order_index')"
-            />
-
-            <button
-              type="button"
-              class="new-product__danger"
-              (click)="removeImage(index)"
-              [disabled]="imagesArray.length === 1"
-            >
-              Quitar
-            </button>
-          </div>
-        }
-      </div>
-    </section>
+    <app-product-images-form [imagesArray]="imagesArray" [submitAttempted]="submitAttempted()" />
 
     @if (errorMessage()) {
       <div class="new-product__error">{{ errorMessage() }}</div>
