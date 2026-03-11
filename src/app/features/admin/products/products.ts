@@ -2,13 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductAdmin } from '@/app/core/models/product.models';
 import { ProductService } from '@/app/core/services/product.service';
-import { Pagination } from '@/app/shared/components/pagination/pagination';
 import { Button } from '@/app/shared/components/button/button';
+import { SharedTable, TableColumn } from '@/app/shared/components/table/table';
 
 @Component({
   selector: 'app-products-admin',
   standalone: true,
-  imports: [Pagination, Button],
+  imports: [Button, SharedTable],
   templateUrl: './products.html',
   styleUrl: './products.scss',
 })
@@ -24,6 +24,51 @@ export class Products {
   readonly itemsPerPage = signal<number>(20);
   readonly totalPages = signal<number>(1);
   readonly totalItems = signal<number>(0);
+
+  readonly tableColumns: TableColumn<ProductAdmin>[] = [
+    { key: 'id', header: 'ID' },
+    {
+      key: 'image_url',
+      header: 'Imagen',
+      cellType: 'image',
+      placeholder: 'Sin imagen',
+      altText: (product) => `Producto ${product.product_name}`,
+    },
+    {
+      key: 'product_name',
+      header: 'Nombre',
+      className: 'products-table__name',
+    },
+    {
+      key: 'price',
+      header: 'Precio',
+      value: (product) => `${this.formatPrice(product.price)} EUR`,
+    },
+    { key: 'category_name', header: 'Categoria' },
+    { key: 'total_stock', header: 'Stock total' },
+    { key: 'total_variants', header: 'Variantes' },
+    {
+      key: 'total_items',
+      header: 'Total items',
+      value: (product) => product.total_items ?? product.total_stock,
+    },
+    {
+      key: 'actions',
+      header: 'Acciones',
+      cellType: 'actions',
+      actions: [
+        {
+          label: 'Editar',
+          onClick: (product) => this.editProduct(product.id),
+        },
+        {
+          label: 'Eliminar',
+          tone: 'danger',
+          onClick: (product) => this.deleteProduct(product.id),
+        },
+      ],
+    },
+  ];
 
   constructor() {
     this.loadProducts(1);
@@ -67,6 +112,10 @@ export class Products {
   createProduct(): void {
     console.log('Crear nuevo producto');
     this.router.navigate(['/products/new']);
+  }
+
+  trackByProduct(_: number, product: ProductAdmin): number {
+    return product.id;
   }
 
   formatPrice(price: number): string {

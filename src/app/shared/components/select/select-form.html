@@ -1,0 +1,14 @@
+<div class="select-group">
+  <label [for]="id()">{{ label() }}</label>
+
+  <select [id]="id()" [formControlName]="controlName()">
+    <option [ngValue]="null">{{ placeholder() }}</option>
+    @for (option of options(); track option.value) {
+      <option [ngValue]="option.value">{{ option.label }}</option>
+    }
+  </select>
+
+  @if (showError() && errorMessage().length > 0) {
+    <span>{{ errorMessage() }}</span>
+  }
+</div>

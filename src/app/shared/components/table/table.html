@@ -1,0 +1,89 @@
+<section class="table-layout">
+  <p class="table-layout__summary">
+    Pagina {{ currentPage() }} de {{ totalPages() }} · {{ totalItems() }} {{ itemLabel() }} totales
+  </p>
+
+  <div class="table-layout__wrap">
+    <table class="table-layout__table">
+      <thead>
+        <tr>
+          @for (column of columns(); track column.key) {
+            <th scope="col" [class]="column.className ?? ''">
+              {{ column.header }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td [attr.colspan]="columnCount()" class="table-layout__state">
+              {{ loadingMessage() }}
+            </td>
+          </tr>
+        } @else if (!rows().length) {
+          <tr>
+            <td [attr.colspan]="columnCount()" class="table-layout__state">{{ emptyMessage() }}</td>
+          </tr>
+        } @else {
+          @for (row of rows(); track rowTrackBy()($index, row)) {
+            <tr>
+              @for (column of columns(); track column.key) {
+                <td
+                  [class]="'table-layout__cell ' + (column.className ?? '')"
+                  [class.table-layout__cell--center]="column.align === 'center'"
+                  [class.table-layout__cell--right]="column.align === 'right'"
+                >
+                  @switch (resolveCellType(column)) {
+                    @case ('image') {
+                      @if (getImageSrc(row, column); as imageSrc) {
+                        <img
+                          class="table-layout__image"
+                          [src]="imageSrc"
+                          [alt]="getAltText(row, column)"
+                        />
+                      } @else {
+                        <span class="table-layout__empty">{{
+                          column.placeholder ?? 'Sin imagen'
+                        }}</span>
+                      }
+                    }
+                    @case ('actions') {
+                      <div class="table-layout__actions">
+                        @for (action of getActions(column); track action.label) {
+                          <button
+                            type="button"
+                            class="table-layout__action"
+                            [class.table-layout__action--danger]="action.tone === 'danger'"
+                            [disabled]="isActionDisabled(action, row)"
+                            (click)="onActionClick(action, row)"
+                          >
+                            {{ action.label }}
+                          </button>
+                        }
+                      </div>
+                    }
+                    @default {
+                      {{ getCellText(row, column) }}
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="table-layout__pagination">
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      [totalItems]="totalItems()"
+      [itemsPerPage]="itemsPerPage()"
+      [disabled]="disabled()"
+      (pageChange)="onPageChange($event)"
+    />
+  </footer>
+</section>
