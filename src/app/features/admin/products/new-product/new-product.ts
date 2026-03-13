@@ -12,7 +12,6 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -24,52 +23,15 @@ import { ProductService } from '@/app/core/services/product.service';
 import { Button } from '@/app/shared/components/button/button';
 import { Input } from '@/app/shared/components/input/input';
 import { ProductImagesForm } from './product-images-form/product-images-form';
+import {
+  nonNegativeIntegerValidator,
+  optionalPositiveIntegerValidator,
+  optionalUrlValidator,
+} from '@/app/shared/utils';
 import { of, switchMap } from 'rxjs';
-
-const optionalPositiveIntegerValidator = (control: AbstractControl): ValidationErrors | null => {
-  const value = control.value;
-  if (value === null || value === undefined || value === '') return null;
-
-  const numericValue = Number(value);
-  if (!Number.isInteger(numericValue) || numericValue <= 0) {
-    return { positiveInteger: true };
-  }
-
-  return null;
-};
-
-const nonNegativeIntegerValidator = (control: AbstractControl): ValidationErrors | null => {
-  const value = control.value;
-  if (value === null || value === undefined || value === '') {
-    return { required: true };
-  }
-
-  const numericValue = Number(value);
-  if (!Number.isInteger(numericValue) || numericValue < 0) {
-    return { nonNegativeInteger: true };
-  }
-
-  return null;
-};
-
-const optionalUrlValidator = (control: AbstractControl): ValidationErrors | null => {
-  const rawValue = control.value;
-  const value = typeof rawValue === 'string' ? rawValue.trim() : '';
-
-  if (!value) return null;
-  if (value.length < 5) return { minlength: true };
-
-  try {
-    new URL(value);
-    return null;
-  } catch {
-    return { invalidUrl: true };
-  }
-};
 
 @Component({
   selector: 'app-new-product',
-  standalone: true,
   imports: [ReactiveFormsModule, Button, Input, ProductImagesForm],
   templateUrl: './new-product.html',
   styleUrl: './new-product.scss',
