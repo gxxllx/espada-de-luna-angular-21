@@ -25,7 +25,6 @@ export interface TableColumn<T = unknown> {
 
 @Component({
   selector: 'app-table',
-  standalone: true,
   imports: [Pagination],
   templateUrl: './table.html',
   styleUrl: './table.scss',

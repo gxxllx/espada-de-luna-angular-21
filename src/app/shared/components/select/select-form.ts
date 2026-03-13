@@ -10,7 +10,6 @@ export interface SelectOption {
 
 @Component({
   selector: 'select-field',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './select-form.html',
   styleUrl: './select-form.scss',

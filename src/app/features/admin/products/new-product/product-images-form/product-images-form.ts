@@ -47,7 +47,6 @@ type ImageInsertMode = 'append' | 'replace-target';
 
 @Component({
   selector: 'app-product-images-form',
-  standalone: true,
   imports: [ReactiveFormsModule, Input],
   templateUrl: './product-images-form.html',
   styleUrl: './product-images-form.scss',

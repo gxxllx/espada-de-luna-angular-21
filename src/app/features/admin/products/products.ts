@@ -7,7 +7,6 @@ import { SharedTable, TableColumn } from '@/app/shared/components/table/table';
 
 @Component({
   selector: 'app-products-admin',
-  standalone: true,
   imports: [Button, SharedTable],
   templateUrl: './products.html',
   styleUrl: './products.scss',

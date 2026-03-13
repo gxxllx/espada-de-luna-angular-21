@@ -6,7 +6,6 @@ type InputAttributeValue = string | number | null;
 
 @Component({
   selector: 'input-field',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './input.html',
   styleUrls: ['./input.scss'],

@@ -3,7 +3,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'button-field',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './button.html',
   styleUrls: ['./button.scss'],
