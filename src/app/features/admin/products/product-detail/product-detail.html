@@ -1,24 +1,29 @@
-<section class="new-product">
-  <header class="new-product__header">
+<section class="product-detail">
+  <header class="product-detail__header">
     <div>
-      <p class="new-product__eyebrow">Admin / Productos</p>
+      <p class="product-detail__eyebrow">Admin / Productos</p>
       <h2>Nuevo producto</h2>
       <span>Define ficha base, variantes e imagenes en un unico envio al backend.</span>
     </div>
 
-    <button type="button" class="new-product__close" (click)="onCancel()" aria-label="Cerrar panel">
+    <button
+      type="button"
+      class="product-detail__close"
+      (click)="onCancel()"
+      aria-label="Cerrar panel"
+    >
       Cerrar
     </button>
   </header>
 
-  <form class="new-product__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <section class="new-product__card new-product__card--main">
-      <div class="new-product__card-header">
+  <form class="product-detail__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <section class="product-detail__card product-detail__card--main">
+      <div class="product-detail__card-header">
         <h3>Datos base</h3>
         <span>Campos principales del producto.</span>
       </div>
 
-      <div class="new-product__grid new-product__grid--primary">
+      <div class="product-detail__grid product-detail__grid--primary">
         <input-field
           class="field field--wide"
           label="Nombre"
@@ -118,21 +123,21 @@
       </div>
     </section>
 
-    <section class="new-product__card">
-      <div class="new-product__card-header new-product__card-header--split">
+    <section class="product-detail__card">
+      <div class="product-detail__card-header product-detail__card-header--split">
         <div>
           <h3>Variantes</h3>
           <span>Crea combinaciones por talla/color con su stock.</span>
         </div>
 
-        <button type="button" class="new-product__ghost" (click)="addVariant()">
+        <button type="button" class="product-detail__ghost" (click)="addVariant()">
           Anadir variante
         </button>
       </div>
 
-      <div class="new-product__stack" formArrayName="variants">
+      <div class="product-detail__stack" formArrayName="variants">
         @for (variant of variantsArray.controls; track variant; let index = $index) {
-          <div class="new-product__row" [formGroupName]="index">
+          <div class="product-detail__row" [formGroupName]="index">
             <input-field
               class="field"
               [id]="'variant-color-' + index"
@@ -174,7 +179,7 @@
 
             <button
               type="button"
-              class="new-product__danger"
+              class="product-detail__danger"
               (click)="removeVariant(index)"
               [disabled]="variantsArray.length === 1"
             >
@@ -188,15 +193,15 @@
     <app-product-images-form [imagesArray]="imagesArray" [submitAttempted]="submitAttempted()" />
 
     @if (errorMessage()) {
-      <div class="new-product__error">{{ errorMessage() }}</div>
+      <div class="product-detail__error">{{ errorMessage() }}</div>
     }
 
     @if (loadingCategories()) {
-      <div class="new-product__info">Cargando categorias...</div>
+      <div class="product-detail__info">Cargando categorias...</div>
     }
 
-    <footer class="new-product__actions">
-      <button type="button" class="new-product__secondary" (click)="onCancel()">Cancelar</button>
+    <footer class="product-detail__actions">
+      <button type="button" class="product-detail__secondary" (click)="onCancel()">Cancelar</button>
 
       <button-field
         label="Crear producto"

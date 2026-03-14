@@ -6,6 +6,8 @@ export interface Product {
   price: number;
   category_id: number;
   image_url: string;
+  volume_cm3?: number;
+  weight_g?: number;
   variants: ProductVariant[];
 }
 
@@ -23,9 +25,20 @@ export interface ProductVariant {
   sale_end_date: string | null;
 }
 
+export interface ProductImage {
+  color_id?: number | null;
+  order_index?: number;
+  name?: string;
+  image_url?: string;
+  url?: string;
+  path?: string;
+  key?: string;
+}
+
 export interface ProductDetail {
   product: Product;
   variants: ProductVariant[];
+  images: ProductImage[];
 }
 
 export interface ProductCreate {

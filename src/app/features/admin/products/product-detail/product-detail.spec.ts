@@ -3,15 +3,15 @@ import { of } from 'rxjs';
 import { CategoryService } from '@/app/core/services/category.service';
 import { ProductService } from '@/app/core/services/product.service';
 
-import { NewProduct } from './new-product';
+import { ProductDetail } from './product-detail';
 
-describe('NewProduct', () => {
-  let component: NewProduct;
-  let fixture: ComponentFixture<NewProduct>;
+describe('ProductDetail', () => {
+  let component: ProductDetail;
+  let fixture: ComponentFixture<ProductDetail>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewProduct],
+      imports: [ProductDetail],
       providers: [
         {
           provide: CategoryService,
@@ -28,7 +28,7 @@ describe('NewProduct', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NewProduct);
+    fixture = TestBed.createComponent(ProductDetail);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -31,13 +31,13 @@ import {
 import { of, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-new-product',
+  selector: 'app-product-detail',
   imports: [ReactiveFormsModule, Button, Input, ProductImagesForm],
-  templateUrl: './new-product.html',
-  styleUrl: './new-product.scss',
+  templateUrl: './product-detail.html',
+  styleUrl: './product-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewProduct {
+export class ProductDetail {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
   private readonly imageService = inject(ImageService);
@@ -108,14 +108,21 @@ export class NewProduct {
 
   constructor() {
     this.loadCategories();
-    this.productForm.get('product_name')!.valueChanges.subscribe((value) => {
+    const productNameControl = this.productForm.get('product_name');
+    const slugControl = this.productForm.get('slug');
+
+    if (!productNameControl || !slugControl) {
+      return;
+    }
+
+    productNameControl.valueChanges.subscribe((value) => {
       const slug = (value ?? '')
         .trim()
         .toLowerCase()
         .replaceAll(/\s+/g, '-')
         .replaceAll(/[^a-z0-9-]/g, '')
         .replaceAll(/-+/g, '-');
-      this.productForm.get('slug')!.setValue(slug, { emitEvent: false });
+      slugControl.setValue(slug, { emitEvent: false });
     });
   }
 

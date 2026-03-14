@@ -1,7 +1,36 @@
 @if (product(); as prod) {
   <section class="product">
     <div class="product__gallery">
-      <img class="product__image" [src]="prod.image_url" [alt]="prod.product_name" />
+      @if (activeImageSrc(); as imageSrc) {
+        <div
+          class="product__image-stage"
+          (mousemove)="onMainImageMouseMove($event)"
+          (mouseleave)="onMainImageMouseLeave()"
+        >
+          <img
+            class="product__image"
+            [class.product__image--zoomed]="zoomActive()"
+            [style.transform-origin]="zoomOriginX() + '% ' + zoomOriginY() + '%'"
+            [src]="imageSrc"
+            [alt]="prod.product_name"
+          />
+        </div>
+      }
+
+      @if (galleryImages().length > 1) {
+        <div class="product__thumbs" aria-label="Product images">
+          @for (image of galleryImages(); track image; let index = $index) {
+            <button
+              type="button"
+              class="product__thumb"
+              [class.product__thumb--active]="selectedImageIndex() === index"
+              (click)="selectImage(index)"
+            >
+              <img [src]="image" [alt]="prod.product_name + ' vista ' + (index + 1)" />
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <div class="product__details">
