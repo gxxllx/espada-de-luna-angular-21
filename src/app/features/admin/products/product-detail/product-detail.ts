@@ -14,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Category } from '@/app/core/models/category.models';
 import { ProductCreateRequest } from '@/app/core/models/product.models';
 import { CategoryService } from '@/app/core/services/category.service';
@@ -43,6 +43,7 @@ export class ProductDetail {
   private readonly imageService = inject(ImageService);
   private readonly categoryService = inject(CategoryService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly closePanel = output<void>();
   readonly saved = output<void>();
@@ -111,19 +112,92 @@ export class ProductDetail {
     const productNameControl = this.productForm.get('product_name');
     const slugControl = this.productForm.get('slug');
 
-    if (!productNameControl || !slugControl) {
-      return;
+    if (productNameControl && slugControl) {
+      productNameControl.valueChanges.subscribe((value) => {
+        const slug = (value ?? '')
+          .trim()
+          .toLowerCase()
+          .replaceAll(/\s+/g, '-')
+          .replaceAll(/[^a-z0-9-]/g, '')
+          .replaceAll(/-+/g, '-');
+        slugControl.setValue(slug, { emitEvent: false });
+      });
     }
 
-    productNameControl.valueChanges.subscribe((value) => {
-      const slug = (value ?? '')
-        .trim()
-        .toLowerCase()
-        .replaceAll(/\s+/g, '-')
-        .replaceAll(/[^a-z0-9-]/g, '')
-        .replaceAll(/-+/g, '-');
-      slugControl.setValue(slug, { emitEvent: false });
+    // Detectar si hay id en la ruta y cargar producto
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
+      if (!Number.isNaN(id)) {
+        this.productService.getById(id).subscribe({
+          next: (response) => {
+            const data = response.data;
+            if (data?.product) {
+              this.fillFormFromProduct({
+                ...data.product,
+                variants: data.variants,
+                images: data.images,
+              });
+            }
+          },
+          error: () => {
+            this.errorMessage.set('No se pudo cargar el producto para editar.');
+          },
+        });
+      }
+    }
+  }
+
+  private fillFormFromProduct(product: any): void {
+    // Rellenar campos principales
+    this.productForm.patchValue({
+      product_name: product.product_name ?? '',
+      slug: product.slug ?? '',
+      product_description: product.product_description ?? '',
+      price: product.price ?? null,
+      image_url: product.image_url ?? '',
+      category_id: product.category_id ?? null,
+      volume_cm3: product.volume_cm3 ?? null,
+      weight_g: product.weight_g ?? null,
     });
+
+    // Variantes
+    while (this.variantsArray.length > 0) {
+      this.variantsArray.removeAt(0);
+    }
+    if (Array.isArray(product.variants) && product.variants.length > 0) {
+      for (const variant of product.variants) {
+        this.variantsArray.push(
+          this.fb.group({
+            color_id: variant.color_id ?? null,
+            size_id: variant.size_id ?? null,
+            stock: variant.stock ?? 0,
+          }),
+        );
+      }
+    } else {
+      this.variantsArray.push(this.createVariantGroup());
+    }
+
+    // Imágenes
+    while (this.imagesArray.length > 0) {
+      this.imagesArray.removeAt(0);
+    }
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      for (const image of product.images) {
+        this.imagesArray.push(
+          this.fb.group({
+            color_id: image.color_id ?? null,
+            name: image.name ?? '',
+            type: image.type ?? 'image/webp',
+            file: null,
+            order_index: image.order_index ?? 0,
+          }),
+        );
+      }
+    } else {
+      this.imagesArray.push(this.createImageGroup());
+    }
   }
 
   get variantsArray(): FormArray {

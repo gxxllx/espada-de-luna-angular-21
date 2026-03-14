@@ -38,8 +38,8 @@ export class ProductService {
     );
   }
 
-  getById(id: number): Observable<ApiResponse<Product>> {
-    return this.api.get<Product>(`${this.routes.BASE}/${id}`);
+  getById(id: number): Observable<ApiResponse<ProductDetail>> {
+    return this.api.get<ProductDetail>(`${this.routes.BASE}/${id}`);
   }
 
   getByCategorySlug(categorySlug: string): Observable<ApiResponse<Product[]>> {

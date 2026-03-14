@@ -30,6 +30,13 @@ export const ADMIN_ROUTES: Routes = [
           ),
       },
       {
+        path: 'products/edit/:id',
+        loadComponent: () =>
+          import('../features/admin/products/product-detail/product-detail').then(
+            (m) => m.ProductDetail,
+          ),
+      },
+      {
         path: 'products',
         loadComponent: () => import('../features/admin/products/products').then((m) => m.Products),
       },

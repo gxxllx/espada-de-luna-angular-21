@@ -101,7 +101,7 @@ export class Products {
   }
 
   editProduct(productId: number): void {
-    console.log('Editar producto', productId);
+    this.router.navigate([`/products/edit/${productId}`]);
   }
 
   deleteProduct(productId: number): void {
